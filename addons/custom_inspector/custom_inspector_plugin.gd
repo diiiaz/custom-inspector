@@ -15,8 +15,6 @@ func _parse_begin(object: Object) -> void:
 	_inspector_root = CIMarginContainer.new().set_all_margins(0).set_node_name("InspectorRoot").build()
 	object.call(METHOD_NAME, _inspector_root)
 	add_custom_control(_inspector_root)
-	#print("custom_inspector_plugin.gd::_parse_begin()")
-	#_inspector_root.print_tree_pretty()
 
 
 static func is_object_valid(object: Object) -> bool:
