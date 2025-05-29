@@ -4,8 +4,15 @@ class_name CIPropertyFlagsController
 var _flags: int = 0
 var _string_flags: PackedStringArray
 
-func _init(string_array: PackedStringArray) -> void:
+func _init(string_array: PackedStringArray = []) -> void:
 	_string_flags = string_array
+
+
+func load_enum(enumerator: Dictionary) -> CIPropertyFlagsController:
+	_string_flags.clear()
+	for flag_index: int in range(enumerator.size()):
+		_string_flags.append(enumerator.keys()[flag_index])
+	return self
 
 
 func build() -> Control:
