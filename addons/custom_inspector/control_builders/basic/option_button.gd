@@ -12,7 +12,7 @@ func setup_items(enumerator: Dictionary) -> CIOptionButton:
 	return self
 
 
-func build() -> Control:
+func build(parent: Control = null) -> Control:
 	var option_button: OptionButton = OptionButton.new()
-	finish_control_setup(option_button)
+	finish_control_setup(option_button, parent)
 	return option_button

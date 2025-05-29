@@ -72,7 +72,7 @@ func set_as_percentage_controller(percentage_step: float = 1) -> CIPropertyNumbe
 	return self
 
 
-func build() -> Control:
+func build(parent: Control = null) -> Control:
 	# main controls builders
 	if not (_hide_slider or _allow_greater or _allow_lesser):
 		_slider = _create_slider()
@@ -102,7 +102,7 @@ func build() -> Control:
 				var final_value: float = snappedf(_slider.get_value(), _slider_step)
 				_spinbox.value = _slider_to_spinbox_callable.call(final_value))
 	
-	finish_control_setup(_spinbox)
+	finish_control_setup(_spinbox, parent)
 	return _spinbox
 
 
@@ -129,8 +129,7 @@ func _create_spinbox() -> SpinBox:
 		.set_margin(CIConstants.DIRECTION.LEFT, 12) \
 		.set_margin(CIConstants.DIRECTION.RIGHT, 12) \
 		.set_mouse_filter(Control.MOUSE_FILTER_IGNORE) \
-		.build()
-	_spinbox.add_child(spinbox_margin)
+		.build(_spinbox)
 	
 	if _slider != null:
 		_spinbox.get_line_edit().editing_toggled.connect(

@@ -58,10 +58,8 @@ func remove_icons() -> CISpinbox:
 	return self
 
 
-func build() -> Control:
+func build(parent: Control = null) -> Control:
 	var spinbox: SpinBox = SpinBox.new()
-	
 	spinbox.select_all_on_focus = true
-	
-	finish_control_setup(spinbox)
+	finish_control_setup(spinbox, parent)
 	return spinbox

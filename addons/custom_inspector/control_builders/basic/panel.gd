@@ -17,8 +17,8 @@ func set_panel(stylebox: StyleBox) -> CIPanel:
 	return self
 
 
-func build() -> Control:
+func build(parent: Control = null) -> Control:
 	var panel: PanelContainer = PanelContainer.new()
 	panel.add_theme_stylebox_override("panel", default_panel)
-	finish_control_setup(panel)
+	finish_control_setup(panel, parent)
 	return panel

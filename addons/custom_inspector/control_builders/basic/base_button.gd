@@ -10,6 +10,6 @@ func set_disable(disable: bool = true) -> CIBaseButton:
 	return self
 
 
-func build() -> Control:
+func build(_parent: Control = null) -> Control:
 	assert(false, "The method 'build' must be overridden in the subclass. (you can't use CIBaseButton by itself.)")
 	return null

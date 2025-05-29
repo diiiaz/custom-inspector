@@ -19,7 +19,7 @@ func load_editor_icon_as_texture(icon_name: String) -> CITextureRect:
 	return self
 
 
-func build() -> Control:
+func build(parent: Control = null) -> Control:
 	var texture_rect: TextureRect = TextureRect.new()
-	finish_control_setup(texture_rect)
+	finish_control_setup(texture_rect, parent)
 	return texture_rect

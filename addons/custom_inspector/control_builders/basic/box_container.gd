@@ -15,7 +15,7 @@ func set_alignment(alignment: BoxContainer.AlignmentMode):
 	add_build_setter(func(box_container: BoxContainer): box_container.set_alignment(alignment))
 	return self
 
-func build() -> Control:
+func build(parent: Control = null) -> Control:
 	var box_container: BoxContainer = HBoxContainer.new() if _orientation == CIConstants.ORIENTATION.HORIZONTAL else VBoxContainer.new()
-	finish_control_setup(box_container)
+	finish_control_setup(box_container, parent)
 	return box_container

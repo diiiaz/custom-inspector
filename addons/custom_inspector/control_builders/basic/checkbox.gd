@@ -15,8 +15,8 @@ func set_text(text: String) -> CICheckbox:
 	return self
 
 
-func build() -> Control:
+func build(parent: Control = null) -> Control:
 	var checkbox: CheckBox = CheckBox.new()
 	checkbox.text = "On"
-	finish_control_setup(checkbox)
+	finish_control_setup(checkbox, parent)
 	return checkbox

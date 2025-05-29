@@ -1,7 +1,7 @@
 extends CIPropertyController
 class_name CIPropertyColorController
 
-func build() -> Control:
+func build(parent: Control = null) -> Control:
 	var color_picker_button: ColorPickerButton = ColorPickerButton.new()
 	color_picker_button.color = _value
 	
@@ -11,5 +11,5 @@ func build() -> Control:
 	color_picker_button.add_theme_stylebox_override("normal", stylebox)
 	color_picker_button.popup_closed.connect(func(): set_value(color_picker_button.color))
 	
-	finish_control_setup(color_picker_button)
+	finish_control_setup(color_picker_button, parent)
 	return color_picker_button

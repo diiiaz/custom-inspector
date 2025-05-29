@@ -10,9 +10,9 @@ func set_width(width: int) -> CIReferenceRect:
 	return self
 
 
-func build() -> Control:
+func build(parent: Control = null) -> Control:
 	var ref_rect: ReferenceRect = ReferenceRect.new()
 	ref_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	ref_rect.border_width = 2
-	finish_control_setup(ref_rect)
+	finish_control_setup(ref_rect, parent)
 	return ref_rect

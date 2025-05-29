@@ -21,7 +21,7 @@ func set_orientation(orientation: CIConstants.ORIENTATION) -> CISlider:
 	return self
 
 
-func build() -> Control:
+func build(parent: Control = null) -> Control:
 	var slider: Slider = HSlider.new() if _orientation == CIConstants.ORIENTATION.HORIZONTAL else VSlider.new()
-	finish_control_setup(slider)
+	finish_control_setup(slider, parent)
 	return slider

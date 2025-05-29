@@ -15,11 +15,11 @@ func set_h_alignment(value: HorizontalAlignment) -> CIRichLabel:
 	return self
 
 
-func build() -> Control:
+func build(parent: Control = null) -> Control:
 	var rich_label: RichTextLabel = RichTextLabel.new()
 	rich_label.bbcode_enabled = true
 	rich_label.fit_content = true
 	rich_label.scroll_active = false
 	rich_label.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
-	finish_control_setup(rich_label)
+	finish_control_setup(rich_label, parent)
 	return rich_label

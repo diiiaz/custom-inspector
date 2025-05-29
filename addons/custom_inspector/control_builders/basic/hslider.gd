@@ -1,6 +1,6 @@
 extends CISlider
 class_name CIHSlider
 
-func build() -> Control:
+func build(parent: Control = null) -> Control:
 	set_orientation(CIConstants.ORIENTATION.HORIZONTAL)
-	return super.build()
+	return super.build(parent)

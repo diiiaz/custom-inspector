@@ -10,7 +10,7 @@ func set_icon(icon: String) -> CIButton:
 	add_build_setter(func(button: Button): button.set_button_icon(CIHelper.get_icon(icon)))
 	return self
 
-func build() -> Control:
+func build(parent: Control = null) -> Control:
 	var button: Button = Button.new()
-	finish_control_setup(button)
+	finish_control_setup(button, parent)
 	return button

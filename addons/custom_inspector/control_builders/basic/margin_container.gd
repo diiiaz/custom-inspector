@@ -36,8 +36,8 @@ func set_margin(direction: CIConstants.DIRECTION, margin_value: int) -> CIMargin
 	return self
 
 
-func build() -> Control:
+func build(parent: Control = null) -> Control:
 	var margin: MarginContainer = MarginContainer.new()
-	finish_control_setup(margin)
+	finish_control_setup(margin, parent)
 	#prints(margin.get_name(), ":",  margin.get("theme_override_constants/margin_top"), margin.get("theme_override_constants/margin_down"), margin.get("theme_override_constants/margin_left"), margin.get("theme_override_constants/margin_right"))
 	return margin

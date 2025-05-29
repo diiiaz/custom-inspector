@@ -39,7 +39,7 @@ func _get_property_name() -> String:
 
 var _property_panel: PanelContainer
 var _status_label: RichTextLabel
-func build() -> Control:
+func build(parent: Control = null) -> Control:
 	if _binder_property_name not in _binder_object:
 		add_status(CIPropertyStatus.template(CIPropertyStatus.TEMPLATE.ERROR).set_text("Property \"%s\" does not exist." % [_binder_property_name]).set_severity(0))
 	if _controller == null:
@@ -50,23 +50,19 @@ func build() -> Control:
 	stylebox.set_border_width_all(1)
 	
 	_property_panel = CIPanel.new().set_panel(stylebox).build()
-	var vbox: VBoxContainer = CIVBoxContainer.new().build()
-	_property_panel.add_child(vbox)
+	var vbox: VBoxContainer = CIVBoxContainer.new().build(_property_panel)
 	
-	_status_label = CIRichLabel.new().set_text("tyest").build()
-	vbox.add_child(_status_label)
+	_status_label = CIRichLabel.new().set_text("tyest").build(vbox)
 	
-	var property: BoxContainer = CIBoxContainer.new().set_orientation(CIConstants.ORIENTATION.HORIZONTAL if _inline else CIConstants.ORIENTATION.VERTICAL).build()
-	vbox.add_child(property)
+	var property: BoxContainer = CIBoxContainer.new().set_orientation(CIConstants.ORIENTATION.HORIZONTAL if _inline else CIConstants.ORIENTATION.VERTICAL).build(vbox)
 	
-	var property_name_label: Label = CILabel.new().set_text(_get_property_name()).build()
-	property.add_child(property_name_label)
+	CILabel.new().set_text(_get_property_name()).build(property)
 	
 	if _controller != null:
-		property.add_child(_controller.bind_to_property(_binder_object, _binder_property_name).build())
+		_controller.bind_to_property(_binder_object, _binder_property_name).build(property)
 	
 	update_statuses()
-	finish_control_setup(_property_panel)
+	finish_control_setup(_property_panel, parent)
 	return _property_panel
 
 

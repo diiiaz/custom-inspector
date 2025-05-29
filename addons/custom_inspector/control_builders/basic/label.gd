@@ -14,7 +14,7 @@ func set_h_alignment(value: HorizontalAlignment) -> CILabel:
 	add_build_setter(func(label: Label): label.horizontal_alignment = value)
 	return self
 
-func build() -> Control:
+func build(parent: Control = null) -> Control:
 	var label: Label = Label.new()
-	finish_control_setup(label)
+	finish_control_setup(label, parent)
 	return label
