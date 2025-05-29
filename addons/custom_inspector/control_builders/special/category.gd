@@ -1,8 +1,6 @@
 extends CIBase
 class_name CICategory
 
-const Helper = preload("res://addons/custom_inspector/helper.gd")
-
 var _text: String = ""
 var _icon: Texture2D = null
 func _init(text: String, icon: Texture2D = null) -> void:
@@ -21,7 +19,7 @@ func build() -> Control:
 	panel.add_child(hbox)
 	
 	if _icon == null:
-		_icon = Helper.get_icon("")
+		_icon = CIHelper.get_icon("")
 	
 	var _icon: TextureRect = CITextureRect.new() \
 		.set_texture(_icon) \

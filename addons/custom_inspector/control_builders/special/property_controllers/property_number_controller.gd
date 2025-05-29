@@ -161,10 +161,10 @@ func _create_slider() -> Slider:
 	slider_theme_style_grabber_area.thickness = 2
 	_slider.add_theme_stylebox_override("grabber_area", slider_theme_style_grabber_area)
 	_slider.add_theme_stylebox_override("grabber_area_highlight", slider_theme_style_grabber_area)
-	
-	var slider_theme_icon_grabber: Texture2D = CIBase.editor_theme.get_icon("GuiScrollGrabberHl", "EditorIcons")
+
+	var slider_theme_icon_grabber: Texture2D = CIHelper.get_icon("GuiScrollGrabberHl")
 	_slider.add_theme_icon_override("grabber", slider_theme_icon_grabber)
-	_slider.add_theme_icon_override("grabber_highlight", CIBase.editor_theme.get_icon("GuiSliderGrabber", "EditorIcons"))
+	_slider.add_theme_icon_override("grabber_highlight", CIHelper.get_icon("GuiSliderGrabber"))
 	_slider.add_theme_constant_override("center_grabber", 1)
 	
 	return _slider

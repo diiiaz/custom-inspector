@@ -1,4 +1,5 @@
 extends RefCounted
+class_name CIHelper
 
 static func get_icon(icon_path: String, get_default_if_null: bool = true) -> Texture:
 	if EditorInterface.get_editor_theme().has_icon(icon_path, "EditorIcons"):
