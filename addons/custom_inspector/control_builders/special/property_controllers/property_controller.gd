@@ -2,22 +2,33 @@ extends CIBase
 class_name CIPropertyController
 
 var _value: Variant
+var _value_changed_callback: Callable = Callable()
+var _object: Object
+var _property_name: String
+var _statuses: Array[CIPropertyStatus] = []
+
+
 func initialize_value(value: Variant) -> CIPropertyController:
 	_value = value
 	return self
+
 
 func set_value(value: Variant) -> void:
 	if _value_changed_callback.is_null():
 		return
 	_value_changed_callback.call(value)
 
-var _value_changed_callback: Callable = Callable()
+
 func set_value_changed_callback(callable: Callable) -> CIPropertyController:
 	_value_changed_callback = callable
 	return self
 
-var _object: Object
-var _property_name: String
+
+func add_status(status: CIPropertyStatus) -> CIPropertyController:
+	_statuses.append(status)
+	return self
+
+
 func bind_to_property(object: Object, property_name: String) -> CIPropertyController:
 	_object = object
 	_property_name = property_name
