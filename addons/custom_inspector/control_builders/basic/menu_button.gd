@@ -3,7 +3,7 @@ class_name CIMenuButton
 
 
 func load_enum(enumerator: Dictionary) -> CIMenuButton:
-	add_build_setter(setup_items.bind(CIHelper.enum_to_menu_button_items.bind(enumerator)))
+	add_build_setter(func(_unused): setup_items(CIHelper.enum_to_menu_button_items(enumerator)))
 	return self
 
 
