@@ -18,8 +18,20 @@ static func enum_to_menu_button_items(enumerator: Dictionary) -> Array[CIMenuBut
 		items.append(CIMenuButton.CIMenuItem.new().set_text(key))
 	return items
 
+static func string_array_to_menu_button_items(array: PackedStringArray) -> Array[CIMenuButton.CIMenuItem]:
+	var items: Array[CIMenuButton.CIMenuItem] = []
+	for index: int in range(array.size()):
+		var key: String = array[index]
+		items.append(CIMenuButton.CIMenuItem.new().set_text(key))
+	return items
+
 
 static func load_enum_items_in_option_button(option_button: OptionButton, enumerator: Dictionary) -> void:
 	for index: int in range(enumerator.size()):
 		var key: String = enumerator.keys()[index].capitalize()
+		option_button.add_item(key, index)
+
+static func load_string_array_items_in_option_button(option_button: OptionButton, array: PackedStringArray) -> void:
+	for index: int in range(array.size()):
+		var key: String = array[index].capitalize()
 		option_button.add_item(key, index)
