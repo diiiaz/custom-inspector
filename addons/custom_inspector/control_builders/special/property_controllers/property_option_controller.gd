@@ -7,6 +7,10 @@ func load_enum(enumerator: Dictionary) -> CIPropertyOptionController:
 	add_build_setter(CIHelper.load_enum_items_in_option_button.bind(enumerator))
 	return self
 
+func load_string_array(array: Array[String]) -> CIPropertyOptionController:
+	add_build_setter(CIHelper.load_string_array_items_in_option_button.bind(array))
+	return self
+
 func build(parent: Control = null) -> Control:
 	var option_button: OptionButton = CIOptionButton.new().build()
 	option_button.item_selected.connect(

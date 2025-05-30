@@ -6,6 +6,10 @@ func load_enum(enumerator: Dictionary) -> CIMenuButton:
 	add_build_setter(func(_unused): setup_items(CIHelper.enum_to_menu_button_items(enumerator)))
 	return self
 
+func load_string_array(array: Array[String]) -> CIMenuButton:
+	add_build_setter(func(_unused): setup_items(CIHelper.string_array_to_menu_button_items(array)))
+	return self
+
 
 func setup_items(items: Array[CIMenuItem]) -> CIMenuButton:
 	add_build_setter(
