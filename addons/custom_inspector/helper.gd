@@ -9,3 +9,17 @@ static func get_icon(icon_path: String, get_default_if_null: bool = true) -> Tex
 	elif get_default_if_null:
 		return EditorInterface.get_editor_theme().get_icon("Object", "EditorIcons")
 	return null
+
+
+static func enum_to_menu_button_items(enumerator: Dictionary) -> Array[CIMenuButton.CIMenuItem]:
+	var items: Array[CIMenuButton.CIMenuItem] = []
+	for index: int in range(enumerator.size()):
+		var key: String = enumerator.keys()[index]
+		items.append(CIMenuButton.CIMenuItem.new().set_text(key))
+	return items
+
+
+static func load_enum_items_in_option_button(option_button: OptionButton, enumerator: Dictionary) -> void:
+	for index: int in range(enumerator.size()):
+		var key: String = enumerator.keys()[index].capitalize()
+		option_button.add_item(key, index)

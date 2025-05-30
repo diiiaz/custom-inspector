@@ -3,11 +3,12 @@ class_name CIPropertyOptionController
 
 var _items: Dictionary
 
-func _init(items: Dictionary) -> void:
-	_items = items
+func load_enum(enumerator: Dictionary) -> CIPropertyOptionController:
+	add_build_setter(CIHelper.load_enum_items_in_option_button.bind(enumerator))
+	return self
 
 func build(parent: Control = null) -> Control:
-	var option_button: OptionButton = CIOptionButton.new().setup_items(_items).build()
+	var option_button: OptionButton = CIOptionButton.new().build()
 	option_button.select(_value)
 	option_button.item_selected.connect(
 		func(item_index: int):

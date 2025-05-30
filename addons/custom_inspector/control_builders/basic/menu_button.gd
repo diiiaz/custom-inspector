@@ -2,12 +2,9 @@ extends CIButton
 class_name CIMenuButton
 
 
-static func enum_to_items(enumerator: Dictionary) -> Array[CIMenuItem]:
-	var items: Array[CIMenuItem] = []
-	for index: int in range(enumerator.size()):
-		var key: String = enumerator.keys()[index]
-		items.append(CIMenuItem.new().set_text(key))
-	return items
+func load_enum(enumerator: Dictionary) -> CIMenuButton:
+	add_build_setter(setup_items.bind(CIHelper.enum_to_menu_button_items.bind(enumerator)))
+	return self
 
 
 func setup_items(items: Array[CIMenuItem]) -> CIMenuButton:

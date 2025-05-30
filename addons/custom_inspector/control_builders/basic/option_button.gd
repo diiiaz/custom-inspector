@@ -2,13 +2,8 @@ extends CIBaseButton
 class_name CIOptionButton
 
 
-func setup_items(enumerator: Dictionary) -> CIOptionButton:
-	add_build_setter(
-		func(option_button: OptionButton):
-			for index: int in range(enumerator.size()):
-				var key: String = enumerator.keys()[index].capitalize()
-				option_button.add_item(key, index)
-	)
+func load_enum(enumerator: Dictionary) -> CIOptionButton:
+	add_build_setter(CIHelper.load_enum_items_in_option_button.bind(enumerator))
 	return self
 
 
