@@ -58,11 +58,11 @@ func set_minimum_size(size: Vector2) -> CIBase:
 	return self
 
 func set_mouse_entered_callable(callable: Callable) -> CIBaseButton:
-	add_build_setter(func(control: Control): control.mouse_entered.connect(callable))
+	add_build_setter(func(control: Control): control.mouse_entered.connect(callable.bind(control)))
 	return self
 
 func set_mouse_exited_callable(callable: Callable) -> CIBaseButton:
-	add_build_setter(func(control: Control): control.mouse_exited.connect(callable))
+	add_build_setter(func(control: Control): control.mouse_exited.connect(callable.bind(control)))
 	return self
 
 
