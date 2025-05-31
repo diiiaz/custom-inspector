@@ -25,14 +25,14 @@ func build(parent: Control = null) -> Control:
 	CIButton.new() \
 		.set_icon("Edit") \
 		.set_disable(not _has_resource()) \
-		.set_pressed_callable(func(): EditorInterface.edit_resource(load(_get_resource_path()))) \
+		.set_pressed_callable(func(_unused): EditorInterface.edit_resource(load(_get_resource_path()))) \
 		.set_h_size_flag(Control.SIZE_SHRINK_BEGIN) \
 		.build(hbox)
 	
 	CIButton.new() \
 		.set_icon("Load") \
 		.set_pressed_callable(
-			func():
+			func(_unused):
 				EditorInterface.popup_quick_open(
 					func(path: String) -> void:
 						if path.is_empty():
@@ -46,7 +46,7 @@ func build(parent: Control = null) -> Control:
 	CIButton.new() \
 		.set_icon("Remove") \
 		.set_disable(not _has_resource()) \
-		.set_pressed_callable(func(): set_value("" if typeof(_value) == TYPE_STRING else null)) \
+		.set_pressed_callable(func(_unused): set_value("" if typeof(_value) == TYPE_STRING else null)) \
 		.set_h_size_flag(Control.SIZE_SHRINK_BEGIN) \
 		.build(hbox)
 	
