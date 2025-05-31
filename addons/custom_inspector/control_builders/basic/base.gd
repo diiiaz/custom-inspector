@@ -65,6 +65,20 @@ func set_mouse_exited_callable(callable: Callable) -> CIBase:
 	add_build_setter(func(control: Control): control.mouse_exited.connect(callable.bind(control)))
 	return self
 
+func set_custom_meta(name: StringName, value: Variant, set_on_control: bool = true) -> CIBase:
+	if set_on_control:
+		add_build_setter(func(control: Control): control.set_meta(name, value))
+	else:
+		set_meta(name, value)
+	return self
+
+func get_custom_meta(control: Control, name: StringName, get_from_control: bool = true) -> Variant:
+	if get_from_control:
+		return control.get_meta(name)
+	else:
+		return get_meta(name)
+	return null
+
 
 
 func build(_parent: Control = null) -> Control:
