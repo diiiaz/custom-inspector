@@ -6,6 +6,7 @@ var _binder_property_name: String = ""
 var _property_name_override: String = ""
 var _controller: CIPropertyController = null
 var _inline: bool = true
+var _hide_property_label: bool = false
 
 var _property_panel: PanelContainer
 var _status_label: RichTextLabel
@@ -39,6 +40,11 @@ func set_controller(controller: CIPropertyController) -> CIPropertyContainer:
 	return self
 
 
+func hide_property_label() -> CIPropertyContainer:
+	_hide_property_label = true
+	return self
+
+
 func build(parent: Control = null) -> Control:
 	add_status(CIStatusTemplate.create_error("Property \"%s\" does not exist." % [_binder_property_name]).set_status_checker(func(): return _binder_property_name not in _binder_object))
 	add_status(CIStatusTemplate.create_error("Controller does not exist or is not valid.").set_status_checker(func(): return  _controller == null))
@@ -54,7 +60,8 @@ func build(parent: Control = null) -> Control:
 	
 	var property: BoxContainer = CIBoxContainer.new().set_orientation(CIConstants.ORIENTATION.HORIZONTAL if _inline else CIConstants.ORIENTATION.VERTICAL).build(vbox)
 	
-	CILabel.new().set_text(_binder_property_name.capitalize() if _property_name_override.is_empty() else _property_name_override).build(property)
+	if not _hide_property_label:
+		CILabel.new().set_text(_binder_property_name.capitalize() if _property_name_override.is_empty() else _property_name_override).build(property)
 	
 	if _controller != null:
 		_controller.bind_to_property(_binder_object, _binder_property_name).build(property)
