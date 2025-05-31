@@ -53,6 +53,10 @@ func set_v_size_flag(flag: Control.SizeFlags) -> CIBase:
 	add_build_setter(func(control: Control): control.size_flags_vertical = flag)
 	return self
 
+func set_minimum_size(size: Vector2) -> CIBase:
+	add_build_setter(func(control: Control): control.custom_minimum_size = size)
+	return self
+
 
 
 func build(_parent: Control = null) -> Control:
