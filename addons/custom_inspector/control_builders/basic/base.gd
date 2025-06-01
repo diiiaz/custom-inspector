@@ -10,11 +10,16 @@ static var editor_theme: Theme:
 		return null
 
 var _build_setters: Array[Callable]
+var _ready_setters: Array[Callable]
 var _errors: PackedStringArray
 
 
 func add_build_setter(setter: Callable):
 	_build_setters.append(setter)
+	return self
+
+func add_ready_setter(setter: Callable):
+	_ready_setters.append(setter)
 	return self
 
 func finish_control_setup(control: Control, parent: Control = null) -> void:
@@ -24,6 +29,11 @@ func finish_control_setup(control: Control, parent: Control = null) -> void:
 	control.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	for setter: Callable in _build_setters:
 		setter.call(control)
+	control.ready.connect(
+		func():
+			for setter: Callable in _ready_setters:
+				setter.call(control)
+	)
 	if parent != null:
 		parent.add_child(control)
 
@@ -53,6 +63,10 @@ func set_v_size_flag(flag: Control.SizeFlags) -> CIBase:
 	add_build_setter(func(control: Control): control.size_flags_vertical = flag)
 	return self
 
+func set_anchors_preset(preset: Control.LayoutPreset) -> CIBase:
+	add_build_setter(func(control: Control): control.set_anchors_and_offsets_preset(preset))
+	return self
+
 func set_minimum_size(size: Vector2) -> CIBase:
 	add_build_setter(func(control: Control): control.custom_minimum_size = size)
 	return self
@@ -63,6 +77,10 @@ func set_mouse_entered_callable(callable: Callable) -> CIBase:
 
 func set_mouse_exited_callable(callable: Callable) -> CIBase:
 	add_build_setter(func(control: Control): control.mouse_exited.connect(callable.bind(control)))
+	return self
+
+func clip_content() -> CIBase:
+	add_build_setter(func(control: Control): control.clip_contents = true)
 	return self
 
 func set_custom_meta(name: StringName, value: Variant, set_on_control: bool = true) -> CIBase:
