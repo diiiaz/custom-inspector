@@ -6,6 +6,10 @@ func set_text(text: String) -> CIRichLabel:
 	add_build_setter(func(label: RichTextLabel): label.set_text(text))
 	return self
 
+func set_autowrap(autowrap: TextServer.AutowrapMode) -> CIRichLabel:
+	add_build_setter(func(label: RichTextLabel): label.autowrap_mode = autowrap)
+	return self
+
 func set_v_alignment(value: VerticalAlignment) -> CIRichLabel:
 	add_build_setter(func(label: RichTextLabel): label.vertical_alignment = value)
 	return self
