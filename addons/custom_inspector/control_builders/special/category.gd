@@ -1,6 +1,8 @@
 extends CIBase
 class_name CICategory
 
+const META_ARRAY_NAME: String = "ci_category"
+
 var _state_tweener: Tween
 
 var _mask: Control = null
@@ -23,13 +25,16 @@ func _init(text: String, icon: Texture2D = null) -> void:
 
 func _ready() -> void:
 	if _foldable:
-		if not _object.has_meta(_get_meta_name()):
-			_set_open_meta(true)
-		_set_state(_object.get_meta(_get_meta_name()), false)
+		if not _object.has_meta(META_ARRAY_NAME):
+			_object.set_meta(META_ARRAY_NAME, {})
+		if not (_object.get_meta(META_ARRAY_NAME) as Dictionary).has(_get_text_as_meta()):
+			(_object.get_meta(META_ARRAY_NAME) as Dictionary)[_get_text_as_meta()] = false
+		_is_open = (_object.get_meta(META_ARRAY_NAME) as Dictionary)[_get_text_as_meta()]
+		_set_state(_is_open, false)
 
 
-func _set_open_meta(open: bool) -> void:
-	_object.set_meta(_get_meta_name(), open)
+func _get_text_as_meta() -> String:
+	return _text.to_snake_case().replace(" ", "_")
 
 
 func foldable(object: RefCounted, root: Control) -> CICategory:
@@ -39,21 +44,15 @@ func foldable(object: RefCounted, root: Control) -> CICategory:
 	return self
 
 
-func _get_meta_name() -> String:
-	return "ci_category_folding_%s_open" % [_text.to_snake_case().replace(" ", "_")]
-
-
 # ---------------------- State ----------------------
 
 func _open(animate: bool = true) -> void:
 	_is_open = true
-	_set_open_meta(_is_open)
 	update_state(_container.size.y, animate)
 
 
 func _close(animate: bool = true) -> void:
 	_is_open = false
-	_set_open_meta(_is_open)
 	update_state(0, animate)
 
 
@@ -69,6 +68,9 @@ func _set_state(open: bool, animate: bool = true) -> void:
 func update_state(wanted_height: float, animate: bool = true) -> void:
 	if not _foldable:
 		return
+	var new_meta: Dictionary = _object.get_meta(META_ARRAY_NAME)
+	new_meta[_get_text_as_meta()] = _is_open
+	_object.set_meta(META_ARRAY_NAME, new_meta)
 	if not animate:
 		_mask.custom_minimum_size.y = wanted_height
 		_arrow_texture_rect.rotation_degrees = 0 if not _is_open else 90
