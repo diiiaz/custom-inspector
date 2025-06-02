@@ -10,6 +10,8 @@ var _arrow_texture_rect: TextureRect = null
 var _foldable: bool = false
 var _is_open: bool = false
 
+var _object: RefCounted
+
 var _text: String = ""
 var _icon: Texture2D = null
 
@@ -19,30 +21,52 @@ func _init(text: String, icon: Texture2D = null) -> void:
 	_icon = icon
 
 
-func add_to_container(control: Control) -> CICategory:
+func _ready() -> void:
+	if _foldable:
+		if not _object.has_meta(_get_meta_name()):
+			_set_open_meta(true)
+		_set_state(_object.get_meta(_get_meta_name()), false)
+
+
+func _set_open_meta(open: bool) -> void:
+	_object.set_meta(_get_meta_name(), open)
+
+
+func foldable(object: RefCounted, root: Control) -> CICategory:
+	_object = object
 	_foldable = true
-	add_build_setter(func(_unused): _container.add_child(control))
+	add_build_setter(func(_unused): _container.add_child(root))
 	return self
+
+
+func _get_meta_name() -> String:
+	return "ci_category_folding_%s_open" % [_text.to_snake_case().replace(" ", "_")]
 
 
 # ---------------------- State ----------------------
 
-func open(animate: bool = true) -> void:
+func _open(animate: bool = true) -> void:
 	_is_open = true
-	set_state(_container.size.y, animate)
+	_set_open_meta(_is_open)
+	update_state(_container.size.y, animate)
 
 
-func close(animate: bool = true) -> void:
+func _close(animate: bool = true) -> void:
 	_is_open = false
-	set_state(0, animate)
+	_set_open_meta(_is_open)
+	update_state(0, animate)
 
 
-func toggle_state(animate: bool = true) -> void:
-	_is_open = not _is_open
-	open(animate) if _is_open else close(animate)
+func _toggle_state(animate: bool = true) -> void:
+	var open: bool = not _is_open
+	_open(animate) if open else _close(animate)
 
 
-func set_state(wanted_height: float, animate: bool = true) -> void:
+func _set_state(open: bool, animate: bool = true) -> void:
+	_open(animate) if open else _close(animate)
+
+
+func update_state(wanted_height: float, animate: bool = true) -> void:
 	if not _foldable:
 		return
 	if not animate:
@@ -64,7 +88,7 @@ func build(parent: Control = null) -> Control:
 	_build_category_header(root)
 	_build_container(root)
 	finish_control_setup(root, parent)
-	root.ready.connect(open.bind(false))
+	add_ready_setter(func(_unused): _ready())
 	return root
 
 
@@ -121,7 +145,7 @@ func _build_category_header(parent: Control) -> void:
 			.set_flat() \
 			.set_mouse_entered_callable(func(_unused): panel.self_modulate = Color.WHITE * 1.2) \
 			.set_mouse_exited_callable(func(_unused): panel.self_modulate = Color.WHITE) \
-			.set_pressed_callable(func(_unused): toggle_state()) \
+			.set_pressed_callable(func(_unused): _toggle_state()) \
 			.build(panel)
 
 
