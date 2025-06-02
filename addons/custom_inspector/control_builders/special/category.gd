@@ -7,6 +7,8 @@ var _state_tweener: Tween
 
 var _mask: Control = null
 var _container: MarginContainer = null
+var _container_root: MarginContainer = null
+var _container_panel: PanelContainer = null
 var _arrow_texture_rect: TextureRect = null
 
 var _foldable: bool = false
@@ -16,6 +18,10 @@ var _object: RefCounted
 
 var _text: String = ""
 var _icon: Texture2D = null
+
+var _header_panel_stylebox: StyleBoxFlat
+
+var _color: Color = editor_theme.get_stylebox("bg", "EditorInspectorCategory").bg_color
 
 
 func _init(text: String, icon: Texture2D = null) -> void:
@@ -37,6 +43,12 @@ func _get_text_as_meta() -> String:
 	return _text.to_snake_case().replace(" ", "_")
 
 
+func set_color(color: Color) -> CICategory:
+	var hue: float = color.ok_hsl_h
+	_color = Color.from_ok_hsl(hue, 0.7, 0.4)
+	return self
+
+
 func foldable(object: RefCounted, root: Control) -> CICategory:
 	_object = object
 	_foldable = true
@@ -48,7 +60,7 @@ func foldable(object: RefCounted, root: Control) -> CICategory:
 
 func _open(animate: bool = true) -> void:
 	_is_open = true
-	update_state(_container.size.y, animate)
+	update_state(_container_root.size.y, animate)
 
 
 func _close(animate: bool = true) -> void:
@@ -71,22 +83,23 @@ func update_state(wanted_height: float, animate: bool = true) -> void:
 	var new_meta: Dictionary = _object.get_meta(META_ARRAY_NAME)
 	new_meta[_get_text_as_meta()] = _is_open
 	_object.set_meta(META_ARRAY_NAME, new_meta)
+	var tween_speed: float = 0.15
 	if not animate:
-		_mask.custom_minimum_size.y = wanted_height
-		_arrow_texture_rect.rotation_degrees = 0 if not _is_open else 90
-		return
+		tween_speed = 0.0
 	if _state_tweener != null and _state_tweener.is_running():
 		_state_tweener.stop()
 		_state_tweener = null
 	_state_tweener = _container.get_tree().create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO).set_parallel()
-	_state_tweener.tween_property(_mask, "custom_minimum_size:y", wanted_height, 0.3)
-	_state_tweener.tween_property(_arrow_texture_rect, "rotation_degrees", 0 if not _is_open else 90, 0.3)
+	_state_tweener.tween_property(_mask, "custom_minimum_size:y", wanted_height, tween_speed)
+	_state_tweener.tween_property(_arrow_texture_rect, "rotation_degrees", 0 if not _is_open else 90, tween_speed)
+	_state_tweener.tween_property(_header_panel_stylebox, "corner_radius_bottom_left", editor_theme.get_stylebox("bg", "EditorInspectorCategory").corner_radius_bottom_left if not _is_open else 0, tween_speed)
+	_state_tweener.tween_property(_header_panel_stylebox, "corner_radius_bottom_right", editor_theme.get_stylebox("bg", "EditorInspectorCategory").corner_radius_bottom_right if not _is_open else 0, tween_speed)
 
 
 # ---------------------- Build ----------------------
 
 func build(parent: Control = null) -> Control:
-	var root: VBoxContainer = CIVBoxContainer.new().build()
+	var root: VBoxContainer = CIVBoxContainer.new().set_separation(0).build()
 	_build_category_header(root)
 	_build_container(root)
 	finish_control_setup(root, parent)
@@ -95,10 +108,11 @@ func build(parent: Control = null) -> Control:
 
 
 func _build_category_header(parent: Control) -> void:
-	var panel_stylebox: StyleBox = editor_theme.get_stylebox("bg", "EditorInspectorCategory").duplicate()
-	panel_stylebox.content_margin_top = 0
-	panel_stylebox.content_margin_bottom = 0
-	var panel: PanelContainer = CIPanel.new().set_panel(panel_stylebox).set_minimum_size(Vector2(0, 32)).build(parent)
+	_header_panel_stylebox = editor_theme.get_stylebox("bg", "EditorInspectorCategory").duplicate()
+	_header_panel_stylebox.content_margin_top = 0
+	_header_panel_stylebox.content_margin_bottom = 0
+	_header_panel_stylebox.bg_color = _color
+	var panel: PanelContainer = CIPanel.new().set_panel(_header_panel_stylebox).set_minimum_size(Vector2(0, 32)).build(parent)
 	
 	# ---------- Arrow ----------
 	if _foldable:
@@ -145,12 +159,29 @@ func _build_category_header(parent: Control) -> void:
 	if _foldable:
 		CIButton.new() \
 			.set_flat() \
-			.set_mouse_entered_callable(func(_unused): panel.self_modulate = Color.WHITE * 1.2) \
-			.set_mouse_exited_callable(func(_unused): panel.self_modulate = Color.WHITE) \
+			.set_mouse_entered_callable(
+				func(_unused):
+					_container_panel.self_modulate = Color.WHITE * 1.2
+					panel.self_modulate = Color.WHITE * 1.2) \
+			.set_mouse_exited_callable(
+				func(_unused):
+					_container_panel.self_modulate = Color.WHITE
+					panel.self_modulate = Color.WHITE) \
 			.set_pressed_callable(func(_unused): _toggle_state()) \
 			.build(panel)
 
 
 func _build_container(parent: Control) -> void:
 	_mask = CIControl.new().clip_content().build(parent)
-	_container = CIMarginContainer.new().set_margins(0, 0, editor_theme.get_constant("inspector_margin", "Editor"), 0).set_anchors_preset(Control.PRESET_TOP_WIDE).build(_mask)
+	_container_root = CIMarginContainer.new().set_all_margins(0).build(_mask)
+	
+	var panel_stylebox: StyleBoxFlat = editor_theme.get_stylebox("bg", "EditorInspectorCategory").duplicate()
+	panel_stylebox.set_content_margin_all(6)
+	panel_stylebox.bg_color = _color * Color(1, 1, 1, 0.1)
+	panel_stylebox.set_border_width_all(2)
+	panel_stylebox.border_color = _color
+	panel_stylebox.corner_radius_top_left = 0
+	panel_stylebox.corner_radius_top_right = 0
+	_container_panel = CIPanel.new().set_panel(panel_stylebox).build(_container_root)
+	
+	_container = CIMarginContainer.new().set_all_margins(0).set_anchors_preset(Control.PRESET_TOP_WIDE).build(_container_panel)
