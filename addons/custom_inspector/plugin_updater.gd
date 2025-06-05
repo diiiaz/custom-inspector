@@ -87,6 +87,7 @@ func version_to_number(version: String) -> int:
 func check_for_update() -> void:
 	var http_request: HTTPRequest = HTTPRequest.new()
 	http_request.request_completed.connect(_on_http_request_check_request_completed, CONNECT_ONE_SHOT)
+	http_request.ready.connect(func(): http_request.request(_remote_api_releases_url))
 	_editor_plugin.add_child(http_request)
 	http_request.request(_remote_releases_link)
 
