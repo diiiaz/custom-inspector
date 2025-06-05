@@ -3,25 +3,22 @@ class_name CICategory
 
 const META_ARRAY_NAME: String = "ci_category"
 
+var _object: RefCounted
+
 var _state_tweener: Tween
+var _header_panel_stylebox: StyleBoxFlat
 
 var _mask: Control = null
 var _container: MarginContainer = null
-var _container_root: MarginContainer = null
 var _container_panel: PanelContainer = null
 var _arrow_texture_rect: TextureRect = null
 
 var _foldable: bool = false
 var _is_open: bool = false
-
-var _object: RefCounted
-
 var _text: String = ""
-var _icon: Texture2D = null
-
-var _header_panel_stylebox: StyleBoxFlat
-
 var _color: Color = editor_theme.get_stylebox("bg", "EditorInspectorCategory").bg_color
+
+var _icon: Texture2D = null
 
 
 func _init(text: String, icon: Texture2D = null) -> void:
@@ -29,18 +26,39 @@ func _init(text: String, icon: Texture2D = null) -> void:
 	_icon = icon
 
 
-func _ready() -> void:
+func _ready(category_control: Control) -> void:
 	if _foldable:
+		# setup, read / write, meta data
+		var meta_title: String = _format_title_for_meta(_text)
 		if not _object.has_meta(META_ARRAY_NAME):
 			_object.set_meta(META_ARRAY_NAME, {})
-		if not (_object.get_meta(META_ARRAY_NAME) as Dictionary).has(_get_text_as_meta()):
-			(_object.get_meta(META_ARRAY_NAME) as Dictionary)[_get_text_as_meta()] = false
-		_is_open = (_object.get_meta(META_ARRAY_NAME) as Dictionary)[_get_text_as_meta()]
+		if not (_object.get_meta(META_ARRAY_NAME) as Dictionary).has(meta_title):
+			(_object.get_meta(META_ARRAY_NAME) as Dictionary)[meta_title] = false
+		
+		_is_open = (_object.get_meta(META_ARRAY_NAME) as Dictionary)[meta_title]
+		category_control.set_meta("mask", _mask) 
+		category_control.name = "CICategory"
+		
 		_set_state(_is_open, false)
+		
+		# i don't know wtf is going on, but, it works !!
+		for child_category_control in _container_panel.find_children("CICategory*", "Control", true, false):
+			child_category_control.get_meta("mask").item_rect_changed.connect(
+				func():
+					_set_mask_height(_container_panel.get_minimum_size().y if _is_open else _mask.size.y)
+			)
+		await category_control.get_tree().process_frame
+		_set_mask_height.call_deferred(_container_panel.get_minimum_size().y if _is_open else 0)
 
 
-func _get_text_as_meta() -> String:
-	return _text.to_snake_case().replace(" ", "_")
+func _strip_bbcode(source:String) -> String:
+	var regex = RegEx.new()
+	regex.compile("\\[.+?\\]")
+	return regex.sub(source, "", true)
+
+
+func _format_title_for_meta(text: String) -> String:
+	return text.to_snake_case().replace(" ", "_")
 
 
 func set_color(color: Color) -> CICategory:
@@ -58,14 +76,18 @@ func foldable(object: RefCounted, root: Control) -> CICategory:
 
 # ---------------------- State ----------------------
 
+func _update_height(animate: bool = true) -> void:
+	update_state(_container_panel.get_minimum_size().y if _is_open else 0, animate)
+
+
 func _open(animate: bool = true) -> void:
 	_is_open = true
-	update_state(_container_root.size.y, animate)
+	_update_height(animate)
 
 
 func _close(animate: bool = true) -> void:
 	_is_open = false
-	update_state(0, animate)
+	_update_height(animate)
 
 
 func _toggle_state(animate: bool = true) -> void:
@@ -80,20 +102,30 @@ func _set_state(open: bool, animate: bool = true) -> void:
 func update_state(wanted_height: float, animate: bool = true) -> void:
 	if not _foldable:
 		return
+	
 	var new_meta: Dictionary = _object.get_meta(META_ARRAY_NAME)
-	new_meta[_get_text_as_meta()] = _is_open
+	new_meta[_format_title_for_meta(_text)] = _is_open
 	_object.set_meta(META_ARRAY_NAME, new_meta)
-	var tween_speed: float = 0.15
+	
+	var tween_duration: float = 0.15
 	if not animate:
-		tween_speed = 0.0
+		tween_duration = 0.0001
+	
 	if _state_tweener != null and _state_tweener.is_running():
 		_state_tweener.stop()
 		_state_tweener = null
 	_state_tweener = _container.get_tree().create_tween().set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_EXPO).set_parallel()
-	_state_tweener.tween_property(_mask, "custom_minimum_size:y", wanted_height, tween_speed)
-	_state_tweener.tween_property(_arrow_texture_rect, "rotation_degrees", 0 if not _is_open else 90, tween_speed)
-	_state_tweener.tween_property(_header_panel_stylebox, "corner_radius_bottom_left", editor_theme.get_stylebox("bg", "EditorInspectorCategory").corner_radius_bottom_left if not _is_open else 0, tween_speed)
-	_state_tweener.tween_property(_header_panel_stylebox, "corner_radius_bottom_right", editor_theme.get_stylebox("bg", "EditorInspectorCategory").corner_radius_bottom_right if not _is_open else 0, tween_speed)
+	
+	_state_tweener.tween_method(_set_mask_height, _mask.custom_minimum_size.y, wanted_height, tween_duration)
+	var arrow_texture_rotation: float = 90.0 if _is_open else 0.0
+	_state_tweener.tween_property(_arrow_texture_rect, "rotation_degrees", arrow_texture_rotation, tween_duration)
+	var corner_radius: int = 0 if _is_open else editor_theme.get_stylebox("bg", "EditorInspectorCategory").corner_radius_bottom_left
+	_state_tweener.tween_property(_header_panel_stylebox, "corner_radius_bottom_left", corner_radius, tween_duration)
+	_state_tweener.tween_property(_header_panel_stylebox, "corner_radius_bottom_right", corner_radius, tween_duration)
+
+
+func _set_mask_height(wanted_height: float) -> void:
+	_mask.custom_minimum_size.y = wanted_height
 
 
 # ---------------------- Build ----------------------
@@ -103,7 +135,7 @@ func build(parent: Control = null) -> Control:
 	_build_category_header(root)
 	_build_container(root)
 	finish_control_setup(root, parent)
-	add_ready_setter(func(_unused): _ready())
+	add_ready_setter(_ready)
 	return root
 
 
@@ -173,7 +205,7 @@ func _build_category_header(parent: Control) -> void:
 
 func _build_container(parent: Control) -> void:
 	_mask = CIControl.new().clip_content().build(parent)
-	_container_root = CIMarginContainer.new().set_all_margins(0).build(_mask)
+	var container_root = CIMarginContainer.new().set_all_margins(0).build(_mask)
 	
 	var panel_stylebox: StyleBoxFlat = editor_theme.get_stylebox("bg", "EditorInspectorCategory").duplicate()
 	panel_stylebox.set_content_margin_all(6)
@@ -182,6 +214,6 @@ func _build_container(parent: Control) -> void:
 	panel_stylebox.border_color = _color
 	panel_stylebox.corner_radius_top_left = 0
 	panel_stylebox.corner_radius_top_right = 0
-	_container_panel = CIPanel.new().set_panel(panel_stylebox).build(_container_root)
+	_container_panel = CIPanel.new().set_panel(panel_stylebox).build(container_root)
 	
 	_container = CIMarginContainer.new().set_all_margins(0).set_anchors_preset(Control.PRESET_TOP_WIDE).build(_container_panel)
