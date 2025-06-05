@@ -3,8 +3,8 @@
 @tool
 extends RefCounted
 
-const REMOTE_RELEASES_API_URL_TEMPLATE = "https://api.github.com/repos/diiiaz/{repo_name}/releases"
-const REMOTE_RELEASES_URL_TEMPLATE = "https://github.com/diiiaz/{repo_name}/releases"
+const REMOTE_API_RELEASES_URL_TEMPLATE = "https://api.github.com/repos/diiiaz/{repo_name}/releases"
+const REMOTE_USER_RELEASES_URL_TEMPLATE = "https://github.com/diiiaz/{repo_name}/releases"
 
 const UPDATE_TEXT = "\
 ⬤ Update available for plugin \"{plugin_name}\": \
@@ -13,15 +13,15 @@ const UPDATE_TEXT = "\
 click to download and install {plugin_name} {version}\
 [/url][/color], \
 [color=WEB_GRAY][i]\
-or visit {releases_link} to download it manually.\
+or visit {remote_user_releases_url} to download it manually.\
 [/i][/color]"
 
 const RICH_LABEL_META_KEY = "install_plugin_update_for_{plugin_name_snake_case}"
 const TEMP_FILE_NAME = "user://temp.zip"
 
 var _editor_plugin: EditorPlugin
-var _remote_releases_link: String = ""
-var _releases_link: String = ""
+var _remote_api_releases_url: String = ""
+var _remote_user_releases_url: String = ""
 var _console_output_rich_text_label: RichTextLabel = EditorInterface.get_base_control().get_node("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@EditorBottomPanel@7933/@VBoxContainer@7918/@EditorLog@7952/@VBoxContainer@7935/@RichTextLabel@7937")
 var _next_version_release: Dictionary
 
@@ -30,11 +30,11 @@ var _plugin_name: String:
 
 
 func initialize(editor_plugin: EditorPlugin, repo_name: String) -> void:
-	_remote_releases_link = REMOTE_RELEASES_API_URL_TEMPLATE.format({"repo_name": repo_name})
-	_releases_link = REMOTE_RELEASES_URL_TEMPLATE.format({"repo_name": repo_name})
+	_editor_plugin = editor_plugin
+	_remote_api_releases_url = REMOTE_API_RELEASES_URL_TEMPLATE.format({"repo_name": repo_name})
+	_remote_user_releases_url = REMOTE_USER_RELEASES_URL_TEMPLATE.format({"repo_name": repo_name})
 	editor_plugin.tree_exiting.connect(deinitialize)
 	_console_output_rich_text_label.meta_clicked.connect(_on_console_output_meta_clicked)
-	_editor_plugin = editor_plugin
 	check_for_update()
 
 
@@ -62,7 +62,7 @@ func get_update_text() -> String:
 	return UPDATE_TEXT.format({
 		"plugin_name": _plugin_name,
 		"plugin_name_snake_case": _plugin_name.to_snake_case(),
-		"releases_link": _releases_link,
+		"remote_user_releases_url": _remote_user_releases_url,
 		"version": _next_version_release.tag_name,
 	})
 
@@ -89,11 +89,9 @@ func check_for_update() -> void:
 	http_request.request_completed.connect(_on_http_request_check_request_completed, CONNECT_ONE_SHOT)
 	http_request.ready.connect(func(): http_request.request(_remote_api_releases_url))
 	_editor_plugin.add_child(http_request)
-	http_request.request(_remote_releases_link)
 
 
 func _on_http_request_check_request_completed(result: int, response_code: int, headers: PackedStringArray, body: PackedByteArray) -> void:
-	prints(result, response_code, headers, body)
 	if result != HTTPRequest.RESULT_SUCCESS: return
 	
 	var current_version: String = get_version()
