@@ -27,13 +27,13 @@ func finish_control_setup(control: Control, parent: Control = null) -> void:
 	control.set_h_size_flags(Control.SIZE_EXPAND_FILL)
 	control.set_v_size_flags(Control.SIZE_EXPAND_FILL)
 	control.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	for setter: Callable in _build_setters:
-		setter.call(control)
 	control.ready.connect(
 		func():
 			for setter: Callable in _ready_setters:
 				setter.call(control)
 	)
+	for setter: Callable in _build_setters:
+		setter.call(control)
 	if parent != null:
 		parent.add_child(control)
 
