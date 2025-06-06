@@ -1,6 +1,8 @@
 extends RefCounted
 class_name CIHelper
 
+const INSPECTOR_ROOT_NAME: String = "InspectorRoot"
+
 static func get_icon(icon_path: String, get_default_if_null: bool = true) -> Texture:
 	if EditorInterface.get_editor_theme().has_icon(icon_path, "EditorIcons"):
 		return EditorInterface.get_editor_theme().get_icon(icon_path, "EditorIcons")

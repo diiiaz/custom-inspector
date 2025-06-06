@@ -12,7 +12,7 @@ func _can_handle(object: Object) -> bool:
 
 func _parse_begin(object: Object) -> void:
 	_object = object
-	_inspector_root = CIMarginContainer.new().set_all_margins(0).set_node_name("InspectorRoot").build()
+	_inspector_root = CIMarginContainer.new().set_all_margins(0).set_node_name(CIHelper.INSPECTOR_ROOT_NAME).build()
 	object.call(METHOD_NAME, _inspector_root)
 	add_custom_control(_inspector_root)
 
