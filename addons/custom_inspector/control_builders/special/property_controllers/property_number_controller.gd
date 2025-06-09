@@ -71,19 +71,6 @@ func set_range(min: float, max: float, step: float) -> CIPropertyNumberControlle
 	return self
 
 
-func set_as_percentage_controller(percentage_step: float = 1) -> CIPropertyNumberController:
-	set_slider_range(0.0, 1.0, 0.01 * percentage_step)
-	set_spinbox_range(0, 100, percentage_step)
-	set_suffix("%")
-	_slider_to_spinbox_callable = \
-		func(slider_value: float):
-			return slider_value * 100
-	_spinbox_to_slider_callable = \
-		func(spinbox_value: float):
-			return spinbox_value / 100.0
-	return self
-
-
 func build(parent: Control = null) -> Control:
 	# main controls builders
 	if not (_hide_slider or _allow_greater or _allow_lesser):
