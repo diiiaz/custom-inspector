@@ -14,7 +14,7 @@ func load_enum(enumerator: Dictionary) -> CIPropertyFlagsController:
 
 
 func build(parent: Control = null) -> Control:
-	_flags = _value
+	_flags = get_value()
 	var panel: PanelContainer = CIPanel.new().build()
 	var vbox: VBoxContainer = CIVBoxContainer.new().build(panel)
 	

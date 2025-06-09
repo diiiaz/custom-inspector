@@ -39,7 +39,7 @@ func build(parent: Control = null) -> Control:
 					func(path: String) -> void:
 						if path.is_empty():
 							return
-						set_value(path if typeof(_value) == TYPE_STRING else load(path))
+						set_value(path if typeof(get_value()) == TYPE_STRING else load(path))
 				, _resource_names_filter
 				)) \
 		.set_h_size_flag(Control.SIZE_SHRINK_BEGIN) \
@@ -48,7 +48,7 @@ func build(parent: Control = null) -> Control:
 	CIButton.new() \
 		.set_icon("Remove") \
 		.set_disable(not _has_resource()) \
-		.set_pressed_callable(func(_unused): set_value("" if typeof(_value) == TYPE_STRING else null)) \
+		.set_pressed_callable(func(_unused): set_value("" if typeof(get_value()) == TYPE_STRING else null)) \
 		.set_h_size_flag(Control.SIZE_SHRINK_BEGIN) \
 		.build(hbox)
 	
@@ -62,15 +62,15 @@ func _path_formatting(path: String) -> String:
 	return path.get_file()
 
 func _get_resource_path() -> String:
-	if typeof(_value) == TYPE_STRING:
-		return _value
-	if typeof(_value) == TYPE_OBJECT:
-		return _value.resource_path
+	if typeof(get_value()) == TYPE_STRING:
+		return get_value()
+	if typeof(get_value()) == TYPE_OBJECT:
+		return get_value().resource_path
 	return ""
 
 func _has_resource() -> bool:
-	if typeof(_value) == TYPE_STRING:
-		return FileAccess.file_exists(_value)
-	if typeof(_value) == TYPE_OBJECT:
-		return _value != null
+	if typeof(get_value()) == TYPE_STRING:
+		return FileAccess.file_exists(get_value())
+	if typeof(get_value()) == TYPE_OBJECT:
+		return get_value() != null
 	return false

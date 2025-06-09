@@ -121,7 +121,7 @@ func build(parent: Control = null) -> Control:
 func _create_spinbox() -> SpinBox:
 	var spinbox_builder = CISpinbox.new() \
 		.set_range(_spinbox_min, _spinbox_max, _spinbox_step) \
-		.set_value(_slider_to_spinbox_callable.call(_value)) \
+		.set_value(_slider_to_spinbox_callable.call(get_value())) \
 		.set_prefix(_prefix) \
 		.set_suffix(_suffix) \
 		.remove_icons()
@@ -160,7 +160,7 @@ func _create_spinbox() -> SpinBox:
 
 
 func _create_slider() -> Slider:
-	_slider = CIHSlider.new().set_range(_slider_min, _slider_max, _slider_step).set_value(_value).build()
+	_slider = CIHSlider.new().set_range(_slider_min, _slider_max, _slider_step).set_value(get_value()).build()
 	
 	var slider_theme_style_slider: StyleBoxLine = StyleBoxLine.new()
 	slider_theme_style_slider.color = CIBase.editor_theme.get_color("label_color", "EditorSpinSlider") * Color(1, 1, 1, 0.2)

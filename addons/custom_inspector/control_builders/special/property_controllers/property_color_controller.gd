@@ -4,7 +4,7 @@ class_name CIPropertyColorController
 
 func build(parent: Control = null) -> Control:
 	var color_picker_button: ColorPickerButton = ColorPickerButton.new()
-	color_picker_button.color = _value
+	color_picker_button.color = get_value()
 	
 	var stylebox: StyleBox = editor_theme.get_stylebox("child_bg", "EditorProperty").duplicate()
 	stylebox.set_content_margin_all(6)

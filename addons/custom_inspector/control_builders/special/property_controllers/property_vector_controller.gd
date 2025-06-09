@@ -20,22 +20,16 @@ func set_range(min: float, max: float, step: float) -> CIPropertyVectorControlle
 func build(parent: Control = null) -> Control:
 	var hbox: HBoxContainer = CIHBoxContainer.new().build()
 	
-	var x_number_controller: SpinBox = CIPropertyNumberController.new() \
+	var x_number_controller: SpinBox = CIPropertyNumberController.new().set_object(_object) \
 		.set_range(_min, _max, _step) \
-		.initialize_value(_object.get(_property_name).x) \
-		.set_value_changed_callback(
-			func(new_value: float):
-				_object.set(_property_name, Vector2(new_value, _object.get(_property_name).y))
-				) \
+		.set_setter(func(new_value): set_value(Vector2(new_value, get_value().y))) \
+		.set_getter(func(): return get_value().x) \
 		.build(hbox)
 	
-	var y_number_controller: SpinBox = CIPropertyNumberController.new() \
+	var y_number_controller: SpinBox = CIPropertyNumberController.new().set_object(_object) \
 		.set_range(_min, _max, _step) \
-		.initialize_value(_object.get(_property_name).y) \
-		.set_value_changed_callback(
-			func(new_value: float):
-				_object.set(_property_name, Vector2(_object.get(_property_name).x, new_value))
-				) \
+		.set_setter(func(new_value): set_value(Vector2(get_value().x, new_value))) \
+		.set_getter(func(): return get_value().y) \
 		.build(hbox)
 	
 	var spinbox_stylebox: StyleBox = x_number_controller.get_line_edit().get("theme_override_styles/normal").duplicate()

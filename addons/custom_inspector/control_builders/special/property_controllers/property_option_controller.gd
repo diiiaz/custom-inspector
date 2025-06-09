@@ -22,5 +22,5 @@ func build(parent: Control = null) -> Control:
 			set_value(int(_remap.keys()[item_index]))
 	)
 	finish_control_setup(option_button, parent)
-	option_button.select(_remap[_value])
+	option_button.select(_remap[get_value()])
 	return option_button
