@@ -55,7 +55,7 @@ func build(parent: Control = null) -> Control:
 	stylebox.set_content_margin_all(0)
 	stylebox.set_border_width_all(1)
 	
-	_property_panel = CIPanel.new().set_panel(stylebox).build()
+	_property_panel = CIPanel.new().set_panel(stylebox).set_node_name(CIHelper.PROPERTY_CONTAINER_ROOT_NAME).build()
 	var vbox: VBoxContainer = CIVBoxContainer.new().build(_property_panel)
 	
 	_status_label = CIRichLabel.new().set_text("tyest").build(vbox)
