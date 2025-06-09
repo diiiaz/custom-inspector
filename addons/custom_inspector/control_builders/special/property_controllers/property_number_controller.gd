@@ -26,26 +26,18 @@ class_name CIPropertyNumberController
 @export_storage var _slider_step: float = 0.1
 
 
-var _prefix: String = ""
 func set_prefix(prefix: String) -> CIPropertyNumberController:
 	_prefix = prefix
 	return self
 
-var _suffix: String = ""
 func set_suffix(suffix: String) -> CIPropertyNumberController:
 	_suffix = suffix
 	return self
 
-
-var _hide_slider: bool = false
 func hide_slider() -> CIPropertyNumberController:
 	_hide_slider = true
 	return self
 
-
-var _spinbox_min: float = 0.0
-var _spinbox_max: float = 100.0
-var _spinbox_step: float = 0.1
 func set_spinbox_range(min: float, max: float, step: float) -> CIPropertyNumberController:
 	if is_inf(min):_allow_lesser = true
 	if is_inf(max):_allow_greater = true
@@ -54,9 +46,6 @@ func set_spinbox_range(min: float, max: float, step: float) -> CIPropertyNumberC
 	_spinbox_step = step
 	return self
 
-var _slider_min: float = 0.0
-var _slider_max: float = 100.0
-var _slider_step: float = 0.1
 func set_slider_range(min: float, max: float, step: float) -> CIPropertyNumberController:
 	if is_inf(min):_allow_lesser = true
 	if is_inf(max):_allow_greater = true

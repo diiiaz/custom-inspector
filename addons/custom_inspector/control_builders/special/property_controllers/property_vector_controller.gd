@@ -7,9 +7,6 @@ class_name CIPropertyVectorController
 @export_storage var _step: float = 0.1
 
 
-var _min: float = -INF
-var _max: float = INF
-var _step: float = 0.1
 func set_range(min: float, max: float, step: float) -> CIPropertyVectorController:
 	_min = min
 	_max = max
