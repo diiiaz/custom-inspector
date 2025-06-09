@@ -20,15 +20,6 @@ func set_controller(property_controller: CIPropertyController) -> CIPropertyCont
 		_property_controller.set_property_name(_property_name)
 	return self
 
-func _auto_get_controller(object: Object, property_name: String) -> CIPropertyController:
-	match typeof(object.get(property_name)):
-		TYPE_INT: return CIPropertyNumberController.new().set_range(-INF, INF, 1)
-		TYPE_FLOAT: return CIPropertyNumberController.new().set_range(-INF, INF, 0.01)
-		TYPE_STRING: return CIPropertyStringController.new()
-		TYPE_BOOL: return CIPropertyBooleanController.new()
-		TYPE_VECTOR2: return CIPropertyVectorController.new()
-		TYPE_COLOR: return CIPropertyColorController.new()
-	return null
 
 func set_property_name(property_name: String) -> CIPropertyContainer:
 	_property_name = property_name
@@ -42,15 +33,12 @@ func set_inline(inline: bool = true) -> CIPropertyContainer:
 	return self
 
 
-func hide_property_label() -> CIPropertyContainer:
-	_hide_property_label = true
+func hide_property_label(hide: bool = true) -> CIPropertyContainer:
+	_hide_property_label = hide
 	return self
 
 
 func build(parent: Control = null) -> Control:
-	add_status(CIStatusTemplate.create_error("Property \"%s\" does not exist." % [_binder_property_name]).set_status_checker(func(): return _binder_property_name not in _binder_object))
-	add_status(CIStatusTemplate.create_error("Controller does not exist or is not valid.").set_status_checker(func(): return  _controller == null))
-	
 	var stylebox: StyleBoxFlat = editor_theme.get_stylebox("panel", "Panel").duplicate()
 	stylebox.set_content_margin_all(0)
 	stylebox.set_border_width_all(1)
@@ -58,17 +46,15 @@ func build(parent: Control = null) -> Control:
 	_property_panel = CIPanel.new().set_panel(stylebox).set_node_name(CIHelper.PROPERTY_CONTAINER_ROOT_NAME).build()
 	var vbox: VBoxContainer = CIVBoxContainer.new().build(_property_panel)
 	
-	_status_label = CIRichLabel.new().set_text("tyest").build(vbox)
+	_status_label = CIRichLabel.new().build(vbox)
 	
 	var property: BoxContainer = CIBoxContainer.new().set_orientation(CIConstants.ORIENTATION.HORIZONTAL if _inline else CIConstants.ORIENTATION.VERTICAL).build(vbox)
 	
 	if not _hide_property_label:
-		CILabel.new().set_text(_binder_property_name.capitalize() if _property_name_override.is_empty() else _property_name_override).build(property)
+		CILabel.new().set_text(_property_name.capitalize()).build(property)
 	
-	if _controller != null:
-		_controller.bind_to_property(_binder_object, _binder_property_name).build(property)
-		add_statuses(_controller._statuses)
-	
+	_property_controller.build(property)
+	add_statuses(_property_controller.get_statuses())
 	update_statuses()
 	finish_control_setup(_property_panel, parent)
 	return _property_panel
