@@ -24,10 +24,12 @@ func add_ready_setter(setter: Callable):
 	return self
 
 func finish_control_setup(control: Control, parent: Control = null) -> void:
-	control.set_name(control.get_class())
 	control.set_h_size_flags(Control.SIZE_EXPAND_FILL)
 	control.set_v_size_flags(Control.SIZE_EXPAND_FILL)
 	control.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	if not _name_overriden:
+		set_node_name(CIHelper.get_class_name(control))
+	#add_build_setter(func(_control: Control): _control.name = CIHelper.get_class_name(_control))
 	control.ready.connect(
 		func():
 			for setter: Callable in _ready_setters:
@@ -53,7 +55,8 @@ func set_mouse_filter(mouse_filter: Control.MouseFilter) -> CIBase:
 	return self
 
 func set_node_name(name: String) -> CIBase:
-	add_build_setter(func(control: Control): control.set_name(name))
+	add_ready_setter(func(control: Control): control.name = name)
+	_name_overriden = true
 	return self
 
 func set_h_size_flag(flag: Control.SizeFlags) -> CIBase:
@@ -97,7 +100,6 @@ func get_custom_meta(control: Control, name: StringName, get_from_control: bool 
 	else:
 		return get_meta(name)
 	return null
-
 
 
 func build(_parent: Control = null) -> Control:

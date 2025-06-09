@@ -37,3 +37,14 @@ static func load_string_array_items_in_option_button(option_button: OptionButton
 	for index: int in range(array.size()):
 		var key: String = array[index].capitalize()
 		option_button.add_item(key, index)
+
+
+static func get_class_name(thing) -> StringName:
+	var base_type: Variant.Type = typeof(thing)
+	var base_type_name: String = type_string(typeof(thing))
+	if base_type == TYPE_OBJECT:
+		if thing.get_script() != null:
+			base_type_name = ((thing as Object).get_script() as Script).get_global_name()
+		else:
+			base_type_name = (thing as Object).get_class()
+	return base_type_name

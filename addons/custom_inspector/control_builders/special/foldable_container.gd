@@ -29,7 +29,6 @@ func _init(target_object: RefCounted, content_root: Control) -> void:
 
 func _ready(container_control: Control) -> void:
 	_root_control = container_control
-	_root_control.name = "CIFoldableContainer"
 	
 	# Initialize fold state from metadata
 	initialize_fold_state()
