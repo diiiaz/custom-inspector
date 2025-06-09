@@ -1,3 +1,4 @@
+@tool
 extends CIBase
 class_name CISpinbox
 

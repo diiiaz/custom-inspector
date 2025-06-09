@@ -1,3 +1,4 @@
+@tool
 extends CISlider
 class_name CIHSlider
 

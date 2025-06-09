@@ -1,3 +1,4 @@
+@tool
 extends CIBase
 class_name CIFoldableContainer
 ## Foldable container for inspector UI with toggle animation

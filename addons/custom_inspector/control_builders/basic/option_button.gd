@@ -1,3 +1,4 @@
+@tool
 extends CIBaseButton
 class_name CIOptionButton
 

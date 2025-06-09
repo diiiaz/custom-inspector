@@ -1,3 +1,4 @@
+@tool
 extends CISeparator
 class_name CIHSeparator
 

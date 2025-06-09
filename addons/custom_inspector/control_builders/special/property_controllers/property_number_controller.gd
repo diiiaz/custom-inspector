@@ -1,3 +1,4 @@
+@tool
 extends CIPropertyController
 class_name CIPropertyNumberController
 

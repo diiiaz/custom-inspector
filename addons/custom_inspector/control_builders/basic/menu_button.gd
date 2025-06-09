@@ -1,3 +1,4 @@
+@tool
 extends CIButton
 class_name CIMenuButton
 

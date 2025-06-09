@@ -1,3 +1,4 @@
+@tool
 extends CIBoxContainer
 class_name CIVBoxContainer
 
