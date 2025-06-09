@@ -1,4 +1,5 @@
 @tool
+extends Resource
 class_name CIBase
 
 static var editor_theme: Theme:
