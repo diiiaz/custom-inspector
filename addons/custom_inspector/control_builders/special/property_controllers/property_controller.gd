@@ -2,12 +2,12 @@
 extends CIBase
 class_name CIPropertyController
 
-var _value: Variant
-var _value_changed_callback: Callable = Callable()
-var _object: Object
-var _property_name: String
-var _statuses: Array[CIPropertyStatus] = []
+@export_storage var _object: Object
+@export_storage var _property_name: String
+@export_storage var _statuses: Array[CIPropertyStatus] = []
 
+@export_storage var _property_setter: Callable = Callable()
+@export_storage var _property_getter: Callable = Callable()
 
 func initialize_value(value: Variant) -> CIPropertyController:
 	_value = value

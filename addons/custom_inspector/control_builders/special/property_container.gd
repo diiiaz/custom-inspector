@@ -2,18 +2,16 @@
 extends CIBase
 class_name CIPropertyContainer
 
-var _binder_object: Object = null
-var _binder_property_name: String = ""
-var _property_name_override: String = ""
-var _controller: CIPropertyController = null
-var _inline: bool = true
-var _hide_property_label: bool = false
+@export_storage var _inline: bool = true
+@export_storage var _hide_property_label: bool = false
 
-var _property_panel: PanelContainer
-var _status_label: RichTextLabel
+@export_storage var _property_panel: PanelContainer
+@export_storage var _status_label: RichTextLabel
 
-var _statuses: Array[CIPropertyStatus] = []
+@export_storage var _statuses: Array[CIPropertyStatus] = []
 
+@export_storage var _property_name: String = ""
+@export_storage var _property_controller: CIPropertyController = null
 
 func _init(object: Object, property_name: String, inline: bool = true, property_name_override: String = "") -> void:
 	_binder_object = object

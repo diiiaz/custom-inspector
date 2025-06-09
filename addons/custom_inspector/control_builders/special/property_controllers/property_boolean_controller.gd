@@ -2,7 +2,8 @@
 extends CIPropertyController
 class_name CIPropertyBooleanController
 
-var _text: String = "On"
+@export_storage var _text: String = "On"
+
 func set_text(text: String) -> CIPropertyBooleanController:
 	_text = text
 	return self

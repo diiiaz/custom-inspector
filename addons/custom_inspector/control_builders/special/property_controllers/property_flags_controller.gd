@@ -2,11 +2,8 @@
 extends CIPropertyController
 class_name CIPropertyFlagsController
 
-var _flags: int = 0
-var _string_flags: PackedStringArray
-
-func _init(string_array: PackedStringArray = []) -> void:
-	_string_flags = string_array
+@export_storage var _flags: int = 0
+@export_storage var _string_flags: PackedStringArray
 
 
 func load_enum(enumerator: Dictionary) -> CIPropertyFlagsController:

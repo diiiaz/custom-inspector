@@ -2,17 +2,28 @@
 extends CIPropertyController
 class_name CIPropertyNumberController
 
-var _slider_to_spinbox_callable: Callable = \
+@export_storage var _slider_to_spinbox_callable: Callable = \
 	func(value: float):
 		return value
-var _spinbox_to_slider_callable: Callable = \
+@export_storage var _spinbox_to_slider_callable: Callable = \
 	func(value: float):
 		return value
 
-var _spinbox: SpinBox = null
-var _slider: Slider = null
-var _allow_greater: bool = false
-var _allow_lesser: bool = false
+@export_storage var _spinbox: SpinBox = null
+@export_storage var _slider: Slider = null
+@export_storage var _allow_greater: bool = false
+@export_storage var _allow_lesser: bool = false
+@export_storage var _prefix: String = ""
+@export_storage var _suffix: String = ""
+@export_storage var _hide_slider: bool = false
+
+@export_storage var _spinbox_min: float = 0.0
+@export_storage var _spinbox_max: float = 100.0
+@export_storage var _spinbox_step: float = 0.1
+
+@export_storage var _slider_min: float = 0.0
+@export_storage var _slider_max: float = 100.0
+@export_storage var _slider_step: float = 0.1
 
 
 var _prefix: String = ""

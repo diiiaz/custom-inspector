@@ -2,7 +2,7 @@
 extends CIBase
 class_name CISeparator
 
-var _orientation: CIConstants.ORIENTATION
+@export_storage var _orientation: CIConstants.ORIENTATION
 
 func set_orientation(orientation: CIConstants.ORIENTATION):
 	_orientation = orientation

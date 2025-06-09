@@ -2,6 +2,10 @@
 extends CIPropertyController
 class_name CIPropertyVectorController
 
+@export_storage var _min: float = -INF
+@export_storage var _max: float = INF
+@export_storage var _step: float = 0.1
+
 
 var _min: float = -INF
 var _max: float = INF

@@ -3,14 +3,14 @@ extends CIBase
 class_name CICategory
 
 
-var _foldable: bool = false
-var _text: String = ""
-var _icon: Texture2D = null
-var _color: Color = editor_theme.get_stylebox("bg", "EditorInspectorCategory").bg_color
+@export_storage var _foldable: bool = false
+@export_storage var _text: String = ""
+@export_storage var _icon: Texture2D = null
+@export_storage var _color: Color = editor_theme.get_stylebox("bg", "EditorInspectorCategory").bg_color
 
 # Foldable container data
-var _target_object: RefCounted
-var _content_root: Control
+@export_storage var _target_object: RefCounted
+@export_storage var _content_root: Control
 
 
 func _init(text: String, icon_path: String = "") -> void:

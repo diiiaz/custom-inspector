@@ -4,15 +4,12 @@ class_name CIPropertyStatus
 
 static func ALWAYS_TRUE() -> bool: return true
 
-var _color: Color = Color.WHITE
-var _status_string: String = ""
-var _status_checker: Callable = ALWAYS_TRUE
-var _severity: int = 0
-var _global_severity: int = 0
-var _prefix: String = ""
-
-func _init(status_string: String = "") -> void:
-	_status_string = status_string
+@export_storage var _color: Color = Color.WHITE
+@export_storage var _status_string: String = ""
+@export_storage var _status_checker: Callable = ALWAYS_TRUE
+@export_storage var _severity: int = 0
+@export_storage var _global_severity: int = 0
+@export_storage var _prefix: String = ""
 
 func set_text(text: String) -> CIPropertyStatus:
 	_status_string = text

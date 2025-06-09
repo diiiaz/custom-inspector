@@ -6,18 +6,19 @@ class_name CIFoldableContainer
 const FOLD_STATE_META_KEY: String = "ci_foldable_container"
 
 # UI Components
-var _root_control: Control
-var _content_mask: Control
-var _content_container: MarginContainer
-var _content_panel: PanelContainer
-var _arrow_icon: TextureRect
+@export_storage var _root_control: Control
+@export_storage var _content_mask: Control
+@export_storage var _content_container: MarginContainer
+@export_storage var _content_panel: PanelContainer
+@export_storage var _arrow_icon: TextureRect
 
 # State management
-var _target_object: RefCounted
-var _animation_tween: Tween
-var _header_stylebox: StyleBoxFlat
-var _is_expanded: bool = false
-var _color: Color = editor_theme.get_stylebox("bg", "EditorInspectorCategory").bg_color
+@export_storage var _target_object: RefCounted
+@export_storage var _animation_tween: Tween
+@export_storage var _header_stylebox: StyleBoxFlat
+@export_storage var _is_expanded: bool = false
+@export_storage var _color: Color = editor_theme.get_stylebox("bg", "EditorInspectorCategory").bg_color
+@export_storage var _force_color: Color = Color.WHITE
 
 
 func _init(target_object: RefCounted, content_root: Control) -> void:

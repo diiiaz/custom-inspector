@@ -10,10 +10,10 @@ static var editor_theme: Theme:
 			return editor_theme
 		return null
 
-var _build_setters: Array[Callable]
-var _ready_setters: Array[Callable]
-var _errors: PackedStringArray
-
+@export_storage var _build_setters: Array[Callable]
+@export_storage var _ready_setters: Array[Callable]
+@export_storage var _errors: PackedStringArray
+@export_storage var _name_overriden: bool = false
 
 func add_build_setter(setter: Callable):
 	_build_setters.append(setter)

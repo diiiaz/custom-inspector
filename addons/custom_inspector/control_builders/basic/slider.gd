@@ -2,7 +2,7 @@
 extends CIBase
 class_name CISlider
 
-var _orientation: CIConstants.ORIENTATION
+@export_storage var _orientation: CIConstants.ORIENTATION
 
 func set_value(value: float) -> CISlider:
 	add_build_setter(func(slider: Slider): slider.value = value)

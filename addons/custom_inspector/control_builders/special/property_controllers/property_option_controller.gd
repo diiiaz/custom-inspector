@@ -2,7 +2,8 @@
 extends CIPropertyController
 class_name CIPropertyOptionController
 
-var _remap: Dictionary
+@export_storage var _remap: Dictionary
+
 
 func load_enum(enumerator: Dictionary) -> CIPropertyOptionController:
 	add_build_setter(CIHelper.load_enum_items_in_option_button.bind(enumerator))

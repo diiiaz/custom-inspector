@@ -2,7 +2,7 @@
 extends CIBase
 class_name CIResourceHeader
 
-var _resource: Resource
+@export_storage var _resource: Resource
 
 func _init(resource: Resource) -> void:
 	_resource = resource

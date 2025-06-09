@@ -4,14 +4,14 @@ class_name CIPropertyResourceController
 
 const Helper = preload("res://addons/custom_inspector/helper.gd")
 
-var _resource_names_filter: PackedStringArray
+@export_storage var _resource_names_filter: PackedStringArray
 
 
 func _init(resource_names_filter: PackedStringArray) -> void:
 	_resource_names_filter = resource_names_filter
 
 
-var _overriden_path_formatting_callable: Callable = Callable()
+@export_storage var _overriden_path_formatting_callable: Callable = Callable()
 func override_path_formatting(path_formatting_callable: Callable) -> CIPropertyResourceController:
 	_overriden_path_formatting_callable = path_formatting_callable
 	return self
