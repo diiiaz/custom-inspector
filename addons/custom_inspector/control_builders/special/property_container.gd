@@ -80,9 +80,11 @@ func add_status(status: CIPropertyStatus) -> CIPropertyContainer:
 	_statuses.append(status)
 	return self
 
+
 func add_statuses(statuses: Array[CIPropertyStatus]) -> CIPropertyContainer:
 	_statuses.append_array(statuses)
 	return self
+
 
 func get_statuses() -> Array[CIPropertyStatus]:
 	var valid_statuses: Array[CIPropertyStatus] = []
@@ -91,6 +93,7 @@ func get_statuses() -> Array[CIPropertyStatus]:
 			valid_statuses.append(status)
 	valid_statuses.sort_custom(CIPropertyStatus.sort_function)
 	return valid_statuses
+
 
 func update_statuses() -> void:
 	var statuses: Array[CIPropertyStatus] = get_statuses()

@@ -2,6 +2,7 @@
 extends CIPropertyController
 class_name CIPropertyColorController
 
+
 func build(parent: Control = null) -> Control:
 	var color_picker_button: ColorPickerButton = ColorPickerButton.new()
 	color_picker_button.color = get_value()
