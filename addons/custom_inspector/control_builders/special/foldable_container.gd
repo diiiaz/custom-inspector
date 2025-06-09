@@ -35,7 +35,7 @@ func _ready(container_control: Control) -> void:
 	_root_control = container_control
 	
 	# Initialize fold state from metadata
-	initialize_fold_state()
+	await initialize_fold_state()
 	
 	# Connect child container updates
 	connect_child_containers()
@@ -47,6 +47,7 @@ func _ready(container_control: Control) -> void:
 
 ## Initialize fold state from target object's metadata
 func initialize_fold_state() -> void:
+	await _root_control.get_tree().process_frame
 	var state_id := get_state_identifier()
 	
 	if not _target_object.has_meta(FOLD_STATE_META_KEY):
@@ -64,7 +65,7 @@ func initialize_fold_state() -> void:
 ## Generate unique identifier for this container's state
 func get_state_identifier() -> String:
 	var parent_inspector = _root_control.find_parent(CIHelper.INSPECTOR_ROOT_NAME)
-	return str(str(parent_inspector.get_path_to(_root_control).get_name_count()).hash() + _root_control.get_index())
+	return str(parent_inspector.get_path_to(_root_control).hash() + _root_control.get_index())
 
 
 ## Connect child foldable containers for height updates
