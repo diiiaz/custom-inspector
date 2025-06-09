@@ -21,10 +21,14 @@ const FOLD_STATE_META_KEY: String = "ci_foldable_container"
 @export_storage var _force_color: Color = Color.WHITE
 
 
-func _init(target_object: RefCounted, content_root: Control) -> void:
-	_target_object = target_object
-	# Deferred content addition
+func set_content_container(content_root: Control) -> CIFoldableContainer:
 	add_build_setter(func(_unused): _content_container.add_child(content_root))
+	return self
+
+
+func set_object(object: Object) -> CIFoldableContainer:
+	_target_object = object
+	return self
 
 
 func _ready(container_control: Control) -> void:

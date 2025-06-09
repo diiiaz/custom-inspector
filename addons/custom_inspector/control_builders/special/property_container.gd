@@ -13,15 +13,12 @@ class_name CIPropertyContainer
 @export_storage var _property_name: String = ""
 @export_storage var _property_controller: CIPropertyController = null
 
-func _init(object: Object, property_name: String, inline: bool = true, property_name_override: String = "") -> void:
-	_binder_object = object
-	_binder_property_name = property_name
-	if _controller == null:
-		_controller = _auto_get_controller(object, property_name)
-	_inline = inline
-	if property_name_override != "":
-		_property_name_override = property_name_override
 
+func set_controller(property_controller: CIPropertyController) -> CIPropertyContainer:
+	_property_controller = property_controller
+	if not _property_name.is_empty():
+		_property_controller.set_property_name(_property_name)
+	return self
 
 func _auto_get_controller(object: Object, property_name: String) -> CIPropertyController:
 	match typeof(object.get(property_name)):
@@ -33,9 +30,15 @@ func _auto_get_controller(object: Object, property_name: String) -> CIPropertyCo
 		TYPE_COLOR: return CIPropertyColorController.new()
 	return null
 
+func set_property_name(property_name: String) -> CIPropertyContainer:
+	_property_name = property_name
+	if _property_controller != null:
+		_property_controller.set_property_name(_property_name)
+	return self
 
-func set_controller(controller: CIPropertyController) -> CIPropertyContainer:
-	_controller = controller
+
+func set_inline(inline: bool = true) -> CIPropertyContainer:
+	_inline = inline
 	return self
 
 

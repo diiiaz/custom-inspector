@@ -7,8 +7,9 @@ const Helper = preload("res://addons/custom_inspector/helper.gd")
 @export_storage var _resource_names_filter: PackedStringArray
 
 
-func _init(resource_names_filter: PackedStringArray) -> void:
+func setup_names_filter(resource_names_filter: PackedStringArray) -> CIPropertyResourceController:
 	_resource_names_filter = resource_names_filter
+	return self
 
 
 @export_storage var _overriden_path_formatting_callable: Callable = Callable()

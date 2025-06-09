@@ -4,8 +4,9 @@ class_name CIResourceHeader
 
 @export_storage var _resource: Resource
 
-func _init(resource: Resource) -> void:
+func set_resource(resource: Resource) -> CIResourceHeader:
 	_resource = resource
+	return self
 
 
 func build(parent: Control = null) -> Control:

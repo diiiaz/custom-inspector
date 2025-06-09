@@ -3,8 +3,9 @@ extends CIBaseButton
 class_name CIGridContainer
 
 
-func _init(columns: int) -> void:
+func set_columns(columns: int) -> CIGridContainer:
 	add_build_setter(func(grid_container: GridContainer): grid_container.columns = columns)
+	return self
 
 
 func build(parent: Control = null) -> Control:

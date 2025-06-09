@@ -3,8 +3,9 @@ extends CIBaseButton
 class_name CIEmptySpace
 
 
-func _init(size: Vector2) -> void:
+func set_minimum_size(size: Vector2) -> CIEmptySpace:
 	set_minimum_size(size)
+	return self
 
 
 func build(parent: Control = null) -> Control:

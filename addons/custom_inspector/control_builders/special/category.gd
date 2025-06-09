@@ -13,9 +13,14 @@ class_name CICategory
 @export_storage var _content_root: Control
 
 
-func _init(text: String, icon_path: String = "") -> void:
+func set_text(text: String) -> CICategory:
 	_text = text
+	return self
+
+
+func set_icon(icon_path: String) -> CICategory:
 	_icon = CIHelper.get_icon(icon_path)
+	return self
 
 
 ## Set category as foldable and return self for chaining
