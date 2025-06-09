@@ -67,20 +67,19 @@ func build(parent: Control = null) -> Control:
 	_spinbox = _create_spinbox()
 	
 	# signals
-	if _value_changed_callback != Callable():
-		_spinbox.get_line_edit().text_submitted.connect(
-			func(text_number: String):
-				if text_number.is_empty():
-					_spinbox.value = 0
-					text_number = "0"
-				var unclamped_value: float = _spinbox_to_slider_callable.call(snappedf(text_number.to_float(), _spinbox_step))
-				var clamped_value: float = clampf(unclamped_value, _slider_min, _slider_max)
-				set_value(clamped_value))
-		if _slider != null:
-			_slider.drag_ended.connect(
-				func(value: float):
-					var final_value: float = snappedf(_slider.get_value(), _slider_step)
-					set_value(final_value))
+	_spinbox.get_line_edit().text_submitted.connect(
+		func(text_number: String):
+			if text_number.is_empty():
+				_spinbox.value = 0
+				text_number = "0"
+			var unclamped_value: float = _spinbox_to_slider_callable.call(snappedf(text_number.to_float(), _spinbox_step))
+			var clamped_value: float = clampf(unclamped_value, _slider_min, _slider_max)
+			set_value(clamped_value))
+	if _slider != null:
+		_slider.drag_ended.connect(
+			func(value: float):
+				var final_value: float = snappedf(_slider.get_value(), _slider_step)
+				set_value(final_value))
 	
 	if _slider != null:
 		_spinbox.get_line_edit().text_submitted.connect(func(text_number: String): _slider.value = _spinbox_to_slider_callable.call(text_number.to_float()))
