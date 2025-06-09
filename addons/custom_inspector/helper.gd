@@ -13,6 +13,12 @@ static func get_icon(icon_path: String, get_default_if_null: bool = true) -> Tex
 	return null
 
 
+static func get_foldable_container_color(color: Color) -> Color:
+	var hue: float = color.ok_hsl_h
+	var new_color: Color = Color.from_ok_hsl(hue, 0.7, 0.4)
+	return new_color
+
+
 static func enum_to_menu_button_items(enumerator: Dictionary) -> Array[CIMenuButton.CIMenuItem]:
 	var items: Array[CIMenuButton.CIMenuItem] = []
 	for index: int in range(enumerator.size()):

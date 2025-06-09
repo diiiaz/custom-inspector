@@ -79,8 +79,12 @@ func connect_child_containers() -> void:
 
 ## Set container color and return self for chaining
 func set_color(color: Color) -> CIFoldableContainer:
-	var hue: float = color.ok_hsl_h
-	_color = Color.from_ok_hsl(hue, 0.7, 0.4)
+	_color = color
+	return self
+
+## Set container color and return self for chaining
+func force_color(color: Color) -> CIFoldableContainer:
+	_force_color = color
 	return self
 
 
@@ -157,7 +161,7 @@ func build_header(parent: Control) -> void:
 	_header_stylebox = editor_theme.get_stylebox("bg", "EditorInspectorCategory").duplicate()
 	_header_stylebox.content_margin_top = 0
 	_header_stylebox.content_margin_bottom = 0
-	_header_stylebox.bg_color = _color
+	_header_stylebox.bg_color = get_style_color()
 	
 	var header_panel = CIPanel.new() \
 		.set_panel(_header_stylebox) \
@@ -232,11 +236,15 @@ func build_content_area(parent: Control) -> void:
 func create_content_stylebox() -> StyleBoxFlat:
 	var style = editor_theme.get_stylebox("bg", "EditorInspectorCategory").duplicate()
 	style.set_content_margin_all(6)
-	style.bg_color = _color * Color(1, 1, 1, 0.1)
+	style.bg_color = get_style_color() * Color(1, 1, 1, 0.1)
 	style.set_border_width_all(2)
-	style.border_color = _color
+	style.border_color = get_style_color()
 	style.corner_radius_top_left = 0
 	style.corner_radius_top_right = 0
 	return style
+
+
+func get_style_color() -> Color:
+	return CIHelper.get_foldable_container_color(_color) if _force_color == Color.WHITE else _force_color
 
 #endregion

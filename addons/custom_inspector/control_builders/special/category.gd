@@ -33,15 +33,14 @@ func foldable(target_object: RefCounted, content_root: Control) -> CICategory:
 
 ## Set container color and return self for chaining
 func set_color(color: Color) -> CICategory:
-	var hue: float = color.ok_hsl_h
-	_color = Color.from_ok_hsl(hue, 0.7, 0.4)
+	_color = color
 	return self
 
 
 ## Build basic category header if not foldable else build a CIFoldableContainer
 func build(parent: Control = null) -> Control:
 	if _foldable:
-		var foldable_container: Control = CIFoldableContainer.new(_target_object, _content_root).set_color(_color).build(parent)
+		var foldable_container: Control = CIFoldableContainer.new().initialize(_target_object, _content_root).set_color(_color).build(parent)
 		build_header_text_and_icon(foldable_container.find_child("*Panel*", true, false))
 		return foldable_container
 	
@@ -55,7 +54,7 @@ func build_header(parent: Control) -> void:
 	var header_stylebox = editor_theme.get_stylebox("bg", "EditorInspectorCategory").duplicate()
 	header_stylebox.content_margin_top = 0
 	header_stylebox.content_margin_bottom = 0
-	header_stylebox.bg_color = _color
+	header_stylebox.bg_color = CIHelper.get_foldable_container_color(_color)
 	
 	var header_panel = CIPanel.new() \
 		.set_panel(header_stylebox) \
