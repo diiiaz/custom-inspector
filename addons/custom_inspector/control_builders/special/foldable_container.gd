@@ -65,7 +65,7 @@ func initialize_fold_state() -> void:
 ## Generate unique identifier for this container's state
 func get_state_identifier() -> String:
 	var parent_inspector = _root_control.find_parent(CIHelper.INSPECTOR_ROOT_NAME)
-	return str(parent_inspector.get_path_to(_root_control).hash() + _root_control.get_index())
+	return str(parent_inspector.get_path_to(_root_control).hash())
 
 
 ## Connect child foldable containers for height updates
