@@ -54,7 +54,7 @@ func build_header(parent: Control) -> void:
 	var header_stylebox = editor_theme.get_stylebox("bg", "EditorInspectorCategory").duplicate()
 	header_stylebox.content_margin_top = 0
 	header_stylebox.content_margin_bottom = 0
-	header_stylebox.bg_color = CIHelper.get_foldable_container_color(_color)
+	header_stylebox.bg_color = _color
 	
 	var header_panel = CIPanel.new() \
 		.set_panel(header_stylebox) \
