@@ -40,7 +40,7 @@ func set_color(color: Color) -> CICategory:
 ## Build basic category header if not foldable else build a CIFoldableContainer
 func build(parent: Control = null) -> Control:
 	if _foldable:
-		var foldable_container: Control = CIFoldableContainer.new().initialize(_target_object, _content_root).set_color(_color).build(parent)
+		var foldable_container: Control = CIFoldableContainer.new().set_object(_target_object).set_content_container(_content_root).set_color(_color).build(parent)
 		build_header_text_and_icon(foldable_container.find_child("*Panel*", true, false))
 		return foldable_container
 	
