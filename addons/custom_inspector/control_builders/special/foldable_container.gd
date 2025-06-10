@@ -33,6 +33,7 @@ func set_object(object: Object) -> CIFoldableContainer:
 
 func _ready(container_control: Control) -> void:
 	_root_control = container_control
+	_root_control.name = "CIFoldableContainer"
 	
 	# Initialize fold state from metadata
 	await initialize_fold_state()
