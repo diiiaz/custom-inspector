@@ -7,7 +7,7 @@ func set_pressed_callable(callable: Callable) -> CIBaseButton:
 	return self
 
 func disable(disabled: bool = true) -> CIBaseButton:
-	add_build_setter(func(button: BaseButton): button.editable = not disabled)
+	add_build_setter(func(button: BaseButton): button.disabled = disabled)
 	return self
 
 

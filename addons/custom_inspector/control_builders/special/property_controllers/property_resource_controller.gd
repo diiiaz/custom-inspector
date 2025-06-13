@@ -48,7 +48,7 @@ func build(parent: Control = null) -> Control:
 	
 	CIButton.new() \
 		.set_icon("Remove") \
-		.set_disable(not _has_resource() or _read_only) \
+		.disable(not _has_resource() or _read_only) \
 		.set_pressed_callable(func(_unused): set_value("" if typeof(get_value()) == TYPE_STRING else null)) \
 		.set_h_size_flag(Control.SIZE_SHRINK_BEGIN) \
 		.build(hbox)
