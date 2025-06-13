@@ -22,7 +22,7 @@ const TEMP_FILE_NAME = "user://temp.zip"
 var _editor_plugin: EditorPlugin
 var _remote_api_releases_url: String = ""
 var _remote_user_releases_url: String = ""
-var _console_output_rich_text_label: RichTextLabel = EditorInterface.get_base_control().get_node("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@EditorBottomPanel@7933/@VBoxContainer@7918/@EditorLog@7952/@VBoxContainer@7935/@RichTextLabel@7937")
+var _console_output_rich_text_label: RichTextLabel = EditorInterface.get_base_control().get_tree().root.get_child(0).get_child(4).get_child(0).get_child(1).get_child(1).get_child(1).get_child(0).get_child(0).get_child(1).get_child(0).get_child(0).get_child(1).get_child(0)
 var _next_version_release: Dictionary
 
 var _plugin_name: String:
