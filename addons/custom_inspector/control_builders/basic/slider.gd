@@ -8,6 +8,10 @@ func set_value(value: float) -> CISlider:
 	add_build_setter(func(slider: Slider): slider.value = value)
 	return self
 
+func disable(disabled: bool = true) -> CISlider:
+	add_build_setter(func(slider: Slider): slider.editable = not disabled)
+	return self
+
 func set_range(min: float, max: float, step: float) -> CISlider:
 	add_build_setter(
 		func(slider: Slider):

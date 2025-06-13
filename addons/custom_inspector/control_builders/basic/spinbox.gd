@@ -41,6 +41,12 @@ func set_suffix(suffix: String) -> CISpinbox:
 	return self
 
 
+func disable(disabled: bool = true) -> CISpinbox:
+	add_build_setter(func(spinbox: SpinBox): spinbox.editable = not disabled)
+	return self
+
+
+
 func remove_icons() -> CISpinbox:
 	add_build_setter(
 		func(spinbox: SpinBox):

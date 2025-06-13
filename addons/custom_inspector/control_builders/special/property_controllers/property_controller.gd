@@ -4,6 +4,7 @@ class_name CIPropertyController
 
 @export_storage var _object: Object
 @export_storage var _property_name: String
+@export_storage var _read_only: bool = false
 @export_storage var _statuses: Array[CIPropertyStatus] = []
 
 @export_storage var _property_setter: Callable = Callable()
@@ -20,6 +21,11 @@ func set_object(object: Object) -> CIPropertyController:
 
 func set_property_name(name: String) -> CIPropertyController:
 	_property_name = name
+	return self
+
+
+func read_only(read_only: bool = true) -> CIPropertyController:
+	_read_only = read_only
 	return self
 
 

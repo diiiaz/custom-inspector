@@ -3,11 +3,11 @@ extends CIBase
 class_name CIBaseButton
 
 func set_pressed_callable(callable: Callable) -> CIBaseButton:
-	add_build_setter(func(button: Button): button.pressed.connect(callable.bind(button)))
+	add_build_setter(func(button: BaseButton): button.pressed.connect(callable.bind(button)))
 	return self
 
-func set_disable(disable: bool = true) -> CIBaseButton:
-	add_build_setter(func(button: Button): button.disabled = disable)
+func disable(disabled: bool = true) -> CIBaseButton:
+	add_build_setter(func(button: BaseButton): button.editable = not disabled)
 	return self
 
 

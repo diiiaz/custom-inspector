@@ -99,6 +99,7 @@ func _create_spinbox() -> SpinBox:
 		.set_value(_slider_to_spinbox_callable.call(get_value())) \
 		.set_prefix(_prefix) \
 		.set_suffix(_suffix) \
+		.disable(_read_only) \
 		.remove_icons()
 	if _allow_greater:
 		spinbox_builder.allow_greater()
@@ -135,7 +136,7 @@ func _create_spinbox() -> SpinBox:
 
 
 func _create_slider() -> Slider:
-	_slider = CIHSlider.new().set_range(_slider_min, _slider_max, _slider_step).set_value(get_value()).build()
+	_slider = CIHSlider.new().set_range(_slider_min, _slider_max, _slider_step).set_value(get_value()).disable(_read_only).build()
 	
 	var slider_theme_style_slider: StyleBoxLine = StyleBoxLine.new()
 	slider_theme_style_slider.color = CIBase.editor_theme.get_color("label_color", "EditorSpinSlider") * Color(1, 1, 1, 0.2)

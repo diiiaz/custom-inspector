@@ -19,7 +19,7 @@ func build(parent: Control = null) -> Control:
 	var vbox: VBoxContainer = CIVBoxContainer.new().build(panel)
 	
 	for flag_index: int in range(_string_flags.size()):
-		var checkbox: CheckBox = CICheckbox.new().set_text(_string_flags[flag_index].capitalize()).build(vbox)
+		var checkbox: CheckBox = CICheckbox.new().set_text(_string_flags[flag_index].capitalize()).disable(_read_only).build(vbox)
 		checkbox.button_pressed = is_flag_set(flag_index)
 		checkbox.toggled.connect(
 			func(toggled: bool):

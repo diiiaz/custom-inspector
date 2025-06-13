@@ -18,12 +18,14 @@ func build(parent: Control = null) -> Control:
 	var hbox: HBoxContainer = CIHBoxContainer.new().build()
 	
 	var x_number_controller: SpinBox = CIPropertyNumberController.new().set_object(_object) \
+		.read_only(_read_only) \
 		.set_range(_min, _max, _step) \
 		.set_setter(func(new_value): set_value(Vector2(new_value, get_value().y))) \
 		.set_getter(func(): return get_value().x) \
 		.build(hbox)
 	
 	var y_number_controller: SpinBox = CIPropertyNumberController.new().set_object(_object) \
+		.read_only(_read_only) \
 		.set_range(_min, _max, _step) \
 		.set_setter(func(new_value): set_value(Vector2(get_value().x, new_value))) \
 		.set_getter(func(): return get_value().y) \

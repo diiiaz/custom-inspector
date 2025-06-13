@@ -13,7 +13,7 @@ func load_enum(enumerator: Dictionary) -> CIPropertyOptionController:
 
 
 func build(parent: Control = null) -> Control:
-	var option_button: OptionButton = CIOptionButton.new().build()
+	var option_button: OptionButton = CIOptionButton.new().disable(_read_only).build()
 	option_button.item_selected.connect(
 		func(item_index: int):
 			set_value(int(_remap.keys()[item_index]))

@@ -26,7 +26,7 @@ func build(parent: Control = null) -> Control:
 	
 	CIButton.new() \
 		.set_icon("Edit") \
-		.set_disable(not _has_resource()) \
+		.disable(not _has_resource() or _read_only) \
 		.set_pressed_callable(func(_unused): EditorInterface.edit_resource(load(_get_resource_path()))) \
 		.set_h_size_flag(Control.SIZE_SHRINK_BEGIN) \
 		.build(hbox)
@@ -42,12 +42,13 @@ func build(parent: Control = null) -> Control:
 						set_value(path if typeof(get_value()) == TYPE_STRING else load(path))
 				, _resource_names_filter
 				)) \
+		.disable(_read_only) \
 		.set_h_size_flag(Control.SIZE_SHRINK_BEGIN) \
 		.build(hbox)
 	
 	CIButton.new() \
 		.set_icon("Remove") \
-		.set_disable(not _has_resource()) \
+		.set_disable(not _has_resource() or _read_only) \
 		.set_pressed_callable(func(_unused): set_value("" if typeof(get_value()) == TYPE_STRING else null)) \
 		.set_h_size_flag(Control.SIZE_SHRINK_BEGIN) \
 		.build(hbox)

@@ -1,5 +1,5 @@
 @tool
-extends CIBase
+extends CIBaseButton
 class_name CICheckbox
 
 
