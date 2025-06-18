@@ -12,6 +12,8 @@ class_name CICategory
 @export_storage var _target_object: RefCounted
 @export_storage var _content_root: Control
 
+var foldable_container_builder: CIFoldableContainer
+
 
 func set_text(text: String) -> CICategory:
 	_text = text
@@ -40,7 +42,8 @@ func set_color(color: Color) -> CICategory:
 ## Build basic category header if not foldable else build a CIFoldableContainer
 func build(parent: Control = null) -> Control:
 	if _foldable:
-		var foldable_container: Control = CIFoldableContainer.new().set_object(_target_object).set_content_container(_content_root).set_color(_color).build(parent)
+		foldable_container_builder = CIFoldableContainer.new().set_object(_target_object).set_content_container(_content_root).set_color(_color)
+		var foldable_container: Control = foldable_container_builder.build(parent)
 		build_header_text_and_icon(foldable_container.find_child("*Panel*", true, false))
 		return foldable_container
 	

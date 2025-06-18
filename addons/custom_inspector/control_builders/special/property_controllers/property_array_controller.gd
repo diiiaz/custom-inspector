@@ -8,6 +8,9 @@ const _DEFAULT_NAME_TEMPLATE: String = "[color=WHITE]{array_property_name}[/colo
 @export_storage var _color: Color = editor_theme.get_stylebox("normal", "InspectorActionButton").bg_color
 @export_storage var _property_controller: CIPropertyController
 
+var foldable_container_builder: CIFoldableContainer
+var foldable_container: Control
+var _array_type: Variant.Type
 
 func set_property_controller(property_controller: CIPropertyController) -> CIPropertyArrayController:
 	_property_controller = property_controller.duplicate(true)
@@ -21,64 +24,92 @@ func set_color(color: Color) -> CIPropertyArrayController:
 
 
 func build(parent: Control = null) -> Control:
-	_content_root = CIVBoxContainer.new().build()
-	var array_type: Variant.Type = get_value().get_typed_builtin()
+	var _root: VBoxContainer = CIVBoxContainer.new().build()
+	_content_root = CIVBoxContainer.new().build(_root)
+	_array_type = get_value().get_typed_builtin()
 	
-	var foldable_container: Control = CIFoldableContainer.new().set_object(_object).set_content_container(_content_root).set_color(_color).build(parent)
+	foldable_container_builder = CIFoldableContainer.new().set_object(_object).set_content_container(_root).set_color(_color)
+	foldable_container = foldable_container_builder.build(parent)
 	var foldable_container_panel: PanelContainer = foldable_container.find_child("*Panel*", true, false)
-	_build_header_text(foldable_container_panel, get_value(), array_type)
 	
-	for index: int in range(get_value().size()):
-		var hbox: HBoxContainer = CIHBoxContainer.new().build(_content_root)
-		CIPropertyContainer.new() \
-			.set_property_name(str(index)) \
-			.set_controller(
-				_property_controller.duplicate(true) \
-					.set_object(_object) \
-					.set_setter(
-						func(new_value: Variant):
-							var new_arr: Array = get_value()
-							# special cases
-							if array_type != TYPE_NIL:
-								match array_type:
-									TYPE_INT:
-										new_arr[index] = int(new_value)
-									_:
-										new_arr[index] = new_value
-							else:
-								new_arr[index] = new_value
-							set_value(new_arr)
-							
-							) \
-					.set_getter(func(): return get_value()[index]) \
-		).build(hbox)
-		CIButton.new() \
-			.set_icon("Remove") \
-			.set_pressed_callable(
-				func(button: Button):
-					var new_arr: Array = get_value()
-					new_arr.remove_at(button.get_meta("button_index"))
-					set_value(new_arr)
-					) \
-			.set_custom_meta("button_index", index) \
-			.set_h_size_flag(Control.SIZE_SHRINK_END) \
-			.build(hbox)
+	_build_header_text(foldable_container_panel, get_value())
+	_build_array()
 	
 	CIButton.new().set_text("Add Element").set_pressed_callable(
 		func(_unused): 
 			var new_arr: Array = get_value()
-			new_arr.append(_get_default_value_from_type(array_type))
+			new_arr.append(_get_default_value_from_type(_array_type))
 			set_value(new_arr)
+			_build_item(_content_root, new_arr.size()-1)
+			foldable_container_builder.update_container_height(false)
 			) \
-		.build(_content_root)
+		.build(_root)
 	
 	return foldable_container
 
 
-func _build_header_text(parent: Control, array: Array, array_type: Variant.Type) -> void:
+func _build_array() -> void:
+	for index: int in range(get_value().size()):
+		_build_item(_content_root, index)
+
+var _property_containers_builders: Array[CIPropertyContainer]
+
+func _build_item(parent: Control, index: int) -> void:
+	var hbox: HBoxContainer = CIHBoxContainer.new().build(parent)
+	# Property Container
+	var propety_container: CIPropertyContainer = CIPropertyContainer.new() \
+		.set_property_name(str(hbox.get_index())) \
+		.set_controller(
+			_property_controller.duplicate(true) \
+				.set_object(_object) \
+				.set_getter(func(): return get_value()[hbox.get_index()]) \
+				.set_setter(
+					func(new_value: Variant):
+						var new_arr: Array = get_value()
+						# special cases
+						if _array_type != TYPE_NIL:
+							match _array_type:
+								TYPE_INT:
+									new_arr[hbox.get_index()] = int(new_value)
+								_:
+									new_arr[hbox.get_index()] = new_value
+						else:
+							new_arr[hbox.get_index()] = new_value
+						set_value(new_arr)
+						))
+	
+	_property_containers_builders.append(propety_container)
+	propety_container.build(hbox)
+	
+	CIButton.new() \
+		.set_icon("Remove") \
+		.set_pressed_callable(
+			func(button: Button):
+				var new_arr: Array = get_value()
+				new_arr.remove_at(hbox.get_index())
+				set_value(new_arr)
+				
+				_property_containers_builders.remove_at(hbox.get_index())
+				update_indexes()
+				
+				hbox.hide()
+				foldable_container_builder.update_container_height(false)
+				hbox.queue_free()
+				) \
+		.set_h_size_flag(Control.SIZE_SHRINK_END) \
+		.build(hbox)
+
+
+func update_indexes() -> void:
+	for index: int in range(_property_containers_builders.size()):
+		var property_container: CIPropertyContainer = _property_containers_builders[index]
+		property_container.property_label.text = str(index)
+
+
+func _build_header_text(parent: Control, array: Array) -> void:
 	var margin: MarginContainer = CIMarginContainer.new().set_margins(0, 0, 32, 0).set_mouse_filter(Control.MOUSE_FILTER_IGNORE).build(parent)
 	
-	var base_type_name: String = type_string(array_type)
+	var base_type_name: String = type_string(_array_type)
 	if not array.is_empty():
 		base_type_name = CIHelper.get_class_name(array[0])
 	

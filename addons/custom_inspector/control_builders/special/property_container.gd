@@ -13,6 +13,8 @@ class_name CIPropertyContainer
 @export_storage var _property_name: String = ""
 @export_storage var _property_controller: CIPropertyController = null
 
+var property_label: Label
+
 
 func set_controller(property_controller: CIPropertyController) -> CIPropertyContainer:
 	_property_controller = property_controller
@@ -51,8 +53,9 @@ func build(parent: Control = null) -> Control:
 	var property: BoxContainer = CIBoxContainer.new().set_orientation(CIConstants.ORIENTATION.HORIZONTAL if _inline else CIConstants.ORIENTATION.VERTICAL).build(vbox)
 	
 	if not _hide_property_label:
-		CILabel.new().set_text(_property_name.capitalize()).build(property)
+		property_label = CILabel.new().set_text(_property_name.capitalize()).build(property)
 	
+	_property_controller.value_changed.connect(func(_unused): update_statuses())
 	_property_controller.build(property)
 	add_statuses(_property_controller.get_statuses())
 	update_statuses()
