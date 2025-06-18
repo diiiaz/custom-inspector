@@ -29,6 +29,7 @@ func build(parent: Control = null) -> Control:
 	_build_header_text(foldable_container_panel, get_value(), array_type)
 	
 	for index: int in range(get_value().size()):
+		var hbox: HBoxContainer = CIHBoxContainer.new().build(_content_root)
 		CIPropertyContainer.new() \
 			.set_property_name(str(index)) \
 			.set_controller(
@@ -50,8 +51,27 @@ func build(parent: Control = null) -> Control:
 							
 							) \
 					.set_getter(func(): return get_value()[index]) \
-		).build(_content_root)
-		
+		).build(hbox)
+		CIButton.new() \
+			.set_icon("Remove") \
+			.set_pressed_callable(
+				func(button: Button):
+					var new_arr: Array = get_value()
+					new_arr.remove_at(button.get_meta("button_index"))
+					set_value(new_arr)
+					) \
+			.set_custom_meta("button_index", index) \
+			.set_h_size_flag(Control.SIZE_SHRINK_END) \
+			.build(hbox)
+	
+	CIButton.new().set_text("Add Element").set_pressed_callable(
+		func(_unused): 
+			var new_arr: Array = get_value()
+			new_arr.append(_get_default_value_from_type(array_type))
+			set_value(new_arr)
+			) \
+		.build(_content_root)
+	
 	return foldable_container
 
 
@@ -69,3 +89,15 @@ func _build_header_text(parent: Control, array: Array, array_type: Variant.Type)
 		"details_color": Color(1, 1, 1, 0.5).to_html(),
 	})
 	CIRichLabel.new().set_text(name).set_v_alignment(VERTICAL_ALIGNMENT_CENTER).set_mouse_filter(Control.MOUSE_FILTER_IGNORE).build(margin)
+
+
+func _get_default_value_from_type(type: Variant.Type) -> Variant:
+	match type:
+		TYPE_FLOAT: return 0.0
+		TYPE_INT: return 0
+		TYPE_BOOL: return false
+		TYPE_STRING: return ""
+		TYPE_OBJECT: return null
+		TYPE_VECTOR2: return Vector2.ZERO
+		TYPE_COLOR: return Color.BLACK
+	return 0
