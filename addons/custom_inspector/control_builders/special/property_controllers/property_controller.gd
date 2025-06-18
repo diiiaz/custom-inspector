@@ -2,6 +2,8 @@
 extends CIBase
 class_name CIPropertyController
 
+signal value_changed(new_value)
+
 @export_storage var _object: Object
 @export_storage var _property_name: String
 @export_storage var _read_only: bool = false
@@ -13,6 +15,7 @@ class_name CIPropertyController
 
 func _init() -> void:
 	add_status(CIStatusTemplate.create_error("Object is not set, use set_object() to set one.").set_status_checker(func(): return _object == null))
+
 
 func set_object(object: Object) -> CIPropertyController:
 	_object = object
@@ -41,6 +44,7 @@ func set_setter(setter: Callable) -> CIPropertyController:
 
 func set_getter(getter: Callable) -> CIPropertyController:
 	_property_getter = getter
+	_on_value_changed.call_deferred(get_value())
 	return self
 
 
@@ -49,7 +53,9 @@ func set_value(new_value: Variant) -> void:
 		push_error("\"_property_setter\" is null.")
 		return
 	_property_setter.call(new_value)
-	_object.notify_property_list_changed()
+	value_changed.emit(new_value)
+	_on_value_changed(new_value)
+
 
 func get_value() -> Variant:
 	if _property_getter.is_null():
@@ -64,3 +70,6 @@ func get_statuses() -> Array[CIPropertyStatus]:
 func add_status(status: CIPropertyStatus) -> CIPropertyController:
 	_statuses.append(status)
 	return self
+
+func _on_value_changed(new_value) -> void:
+	pass
