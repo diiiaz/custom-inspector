@@ -11,6 +11,8 @@ const _DEFAULT_NAME_TEMPLATE: String = "[color=WHITE]{array_property_name}[/colo
 var foldable_container_builder: CIFoldableContainer
 var foldable_container: Control
 var _array_type: Variant.Type
+var _property_containers_builders: Array[CIPropertyContainer]
+
 
 func set_property_controller(property_controller: CIPropertyController) -> CIPropertyArrayController:
 	_property_controller = property_controller.duplicate(true)
@@ -52,13 +54,13 @@ func _build_array() -> void:
 	for index: int in range(get_value().size()):
 		_build_item(_content_root, index)
 
-var _property_containers_builders: Array[CIPropertyContainer]
 
 func _build_item(parent: Control, index: int) -> void:
 	var hbox: HBoxContainer = CIHBoxContainer.new().build(parent)
 	# Property Container
 	var propety_container: CIPropertyContainer = CIPropertyContainer.new() \
 		.set_property_name(str(hbox.get_index())) \
+		.set_property_size(CIPropertyContainer.SIZE.LARGE if _array_type == TYPE_OBJECT else CIPropertyContainer.SIZE.HALF) \
 		.set_controller(
 			_property_controller.duplicate(true) \
 				.set_object(_object) \
