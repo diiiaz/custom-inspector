@@ -9,6 +9,8 @@ const Helper = preload("res://addons/custom_inspector/helper.gd")
 var label: Label
 var edit_button: Button
 var delete_button: Button
+var custom_inspector_root: Control
+
 
 func setup_names_filter(resource_names_filter: PackedStringArray) -> CIPropertyResourceController:
 	_resource_names_filter = resource_names_filter
@@ -22,7 +24,9 @@ func override_path_formatting(path_formatting_callable: Callable) -> CIPropertyR
 
 
 func build(parent: Control = null) -> Control:
-	var hbox: HBoxContainer = CIHBoxContainer.new().build()
+	var vbox: VBoxContainer = CIVBoxContainer.new().build()
+	
+	var hbox: HBoxContainer = CIHBoxContainer.new().build(vbox)
 	label = CILabel.new().set_h_alignment(HORIZONTAL_ALIGNMENT_CENTER).build(hbox)
 	CIPanel.new().show_behind_parent().build(label)
 	
@@ -48,13 +52,14 @@ func build(parent: Control = null) -> Control:
 		.build(hbox)
 	
 	delete_button = CIButton.new() \
-		.set_icon("Remove") \
+		.set_icon("UndoRedo") \
 		.set_pressed_callable(func(_unused): set_value("" if typeof(get_value()) == TYPE_STRING else null)) \
 		.set_h_size_flag(Control.SIZE_SHRINK_BEGIN) \
 		.build(hbox)
 	
-	finish_control_setup(hbox, parent)
-	return hbox
+	custom_inspector_root = CIMarginContainer.new().set_all_margins(0).build(vbox)
+	finish_control_setup(vbox, parent)
+	return vbox
 
 
 func _on_value_changed(new_value) -> void:
@@ -64,6 +69,14 @@ func _on_value_changed(new_value) -> void:
 		edit_button.disabled = not _has_resource() or _read_only
 	if delete_button:
 		delete_button.disabled = not _has_resource() or _read_only
+	if custom_inspector_root:
+		if custom_inspector_root.get_child_count() > 0:
+			for child in custom_inspector_root.get_children():
+				child.queue_free()
+		var has_custom_inspector_function: bool = _has_resource() and get_value().get_script() != null and get_value().get_script().source_code.contains("\nfunc _create_custom_inspector")
+		custom_inspector_root.visible = has_custom_inspector_function
+		if has_custom_inspector_function:
+			get_value()._create_custom_inspector(custom_inspector_root)
 
 
 func _path_formatting(path: String) -> String:
