@@ -12,6 +12,12 @@ func set_separation(separation: int):
 	add_build_setter(func(separator: Separator): separator.add_theme_constant_override("separation", separation))
 	return self
 
+func set_color(color: Color):
+	var stylebox: StyleBoxLine = StyleBoxLine.new()
+	stylebox.color = color
+	add_build_setter(func(separator: Separator): separator.add_theme_stylebox_override("separator", stylebox))
+	return self
+
 
 func build(parent: Control = null) -> Control:
 	var separator: Separator = HSeparator.new() if _orientation == CIConstants.ORIENTATION.HORIZONTAL else VSeparator.new()
