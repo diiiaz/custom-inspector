@@ -2,8 +2,14 @@
 extends CIBase
 class_name CIPropertyContainer
 
+enum SIZE {
+	HALF,
+	LARGE,
+}
+
 @export_storage var _inline: bool = true
 @export_storage var _hide_property_label: bool = false
+@export_storage var _property_size: SIZE = SIZE.HALF
 
 @export_storage var _property_panel: PanelContainer
 @export_storage var _status_label: RichTextLabel
@@ -40,6 +46,11 @@ func hide_property_label(hide: bool = true) -> CIPropertyContainer:
 	return self
 
 
+func set_property_size(size: SIZE) -> CIPropertyContainer:
+	_property_size = size
+	return self
+
+
 func build(parent: Control = null) -> Control:
 	var stylebox: StyleBoxFlat = editor_theme.get_stylebox("panel", "Panel").duplicate()
 	stylebox.set_content_margin_all(0)
@@ -50,10 +61,12 @@ func build(parent: Control = null) -> Control:
 	
 	_status_label = CIRichLabel.new().build(vbox)
 	
-	var property: BoxContainer = CIBoxContainer.new().set_orientation(CIConstants.ORIENTATION.HORIZONTAL if _inline else CIConstants.ORIENTATION.VERTICAL).build(vbox)
+	var property: BoxContainer = CIBoxContainer.new() \
+		.set_orientation(CIConstants.ORIENTATION.HORIZONTAL if _inline else CIConstants.ORIENTATION.VERTICAL).build(vbox)
 	
 	if not _hide_property_label:
 		property_label = CILabel.new().set_text(_property_name.capitalize()).build(property)
+		property_label.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN if _property_size == SIZE.LARGE else Control.SIZE_EXPAND_FILL
 	
 	_property_controller.value_changed.connect(func(_unused): update_statuses())
 	_property_controller.build(property)
